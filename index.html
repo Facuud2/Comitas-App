@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>L'Restaurant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 15px 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: #8b4513;
+    }
+
+    nav {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      text-decoration: none;
+      color: white;
+      background-color: #8b4513;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      background-color: #a0522d;
+    }
+
+    .hero {
+      width: 100%;
+      min-height: 70vh;
+      background: url(' https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 500px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+    }
+
+    .about {
+      padding: 40px 20px;
+      text-align: center;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+
+    .about h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #5c3d2e;
+    }
+
+    .about p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #555;
+    }
+
+    .call-to-action {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #8b4513;
+      margin-top: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .reviews {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 30px 15px;
+      background-color: #fffaf5;
+      margin-top: 20px;
+    }
+
+    .review-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      width: 100%;
+      max-width: 300px;
+      transition: transform 0.3s ease;
+    }
+
+    .review-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .review-card p {
+      font-style: italic;
+      color: #555;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .review-author {
+      font-weight: bold;
+      color: #8b4513;
+      font-size: 0.9rem;
+    }
+
+    .reserve-cta {
+      width: 100%;
+      padding: 30px 20px;
+      background-color: #fffaf5;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .reserve-cta h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: #5c3d2e;
+      margin-bottom: 15px;
+    }
+
+    .reserve-cta p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .reserve-btn {
+      background-color: #8b4513;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .reserve-btn:hover {
+      background-color: #a0522d;
+    }
+
+    footer {
+      width: 100%;
+      padding: 15px 20px;
+      background-color: #222;
+      color: #ccc;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    /* Sección de Especialidades */
+    .specialties {
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #fff9f5 0%, #fffcf9 100%);
+      text-align: center;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      color: #5c3d2e;
+      margin-bottom: 40px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title:after {
+      content: '';
+      position: absolute;
+      width: 80px;
+      height: 2px;
+      background: #8b4513;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .specialties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .specialty-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .specialty-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .specialty-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .specialty-content {
+      padding: 20px;
+      text-align: left;
+    }
+
+    .specialty-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      color: #5c3d2e;
+      margin-bottom: 10px;
+    }
+
+    .specialty-desc {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    /* Galería */
+    .gallery {
+      padding: 60px 20px;
+      background: white;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      aspect-ratio: 1;
+    }
+
+    .gallery-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover .gallery-img {
+      transform: scale(1.05);
+    }
+
+    /* Testimonios */
+    .testimonials {
+      padding: 60px 20px;
+      background: #faf6f2;
+      text-align: center;
+    }
+
+    .testimonial-slider {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .testimonial {
+      padding: 30px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin: 0 15px;
+    }
+
+    .testimonial-text {
+      font-style: italic;
+      color: #555;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-author {
+      font-weight: 600;
+      color: #8b4513;
+    }
+
+    /* Animaciones */
+    [data-aos] {
+      opacity: 0;
+      transition-property: opacity, transform;
+    }
+
+    [data-aos].aos-animate {
+      opacity: 1;
+    }
+
+    .fade-up {
+      transform: translateY(30px);
+    }
+
+    .fade-up.aos-animate {
+      transform: translateY(0);
+    }
+
+    .fade-left {
+      transform: translateX(-30px);
+    }
+
+    .fade-left.aos-animate {
+      transform: translateX(0);
+    }
+
+    .fade-right {
+      transform: translateX(30px);
+    }
+
+    .fade-right.aos-animate {
+      transform: translateX(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      nav {
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+
+      .about h2 {
+        font-size: 1.5rem;
+      }
+
+      .about p {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">L'Restaurant</div>
+    <nav>
+      <a href="index.html" class="btn">Inicio</a>
+      <a href="#" class="btn">Locales</a>
+      <a href="pages/reservas.html" class="btn">Hacer una reserva</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Bienvenido a L'Restaurant</h1>
+    <p>Disfruta de la mejor experiencia culinaria en un ambiente moderno y elegante.</p>
+  </section>
+
+  <section class="about">
+    <h2>Sobre nosotros</h2>
+    <p>
+      En L'Restaurant fusionamos el arte culinario con un servicio excepcional y un entorno sofisticado.
+      Cada plato es preparado con ingredientes frescos y seleccionados cuidadosamente para deleitar tu paladar.
+      Nuestro compromiso es brindarte momentos inolvidables, rodeado de elegancia y sabor auténtico.
+    </p>
+    <p class="call-to-action">
+      ¡Reserva ya y vive una experiencia única que no podrás olvidar!
+    </p>
+  </section>
+
+  <section class="specialties" data-aos="fade-up">
+    <h2 class="section-title">Nuestras Especialidades</h2>
+    <div class="specialties-grid">
+      <div class="specialty-card" data-aos="fade-up" data-aos-delay="100">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Plato Especial" class="specialty-img">
+        <div class="specialty-content">
+          <h3 class="specialty-title">Cocina de Autor</h3>
+          <p class="specialty-desc">Platos innovadores que combinan tradición y vanguardia, preparados con ingredientes de primera calidad.</p>
+        </div>
+      </div>
+      <div class="specialty-card" data-aos="fade-up" data-aos-delay="200">
+        <img src="https://images.unsplash.com/photo-1676327701588-c6ea8302ad86?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Postres" class="specialty-img">
+        <div class="specialty-content">
+          <h3 class="specialty-title">Postres Exquisitos</h3>
+          <p class="specialty-desc">Una selección de postres artesanales que deleitarán tu paladar con sabores únicos y presentaciones impresionantes.</p>
+        </div>
+      </div>
+      <div class="specialty-card" data-aos="fade-up" data-aos-delay="300">
+        <img src="https://images.unsplash.com/photo-1706129238922-6b3b9270713b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29jdGVsZXMlMjByZXN0YXVyYW50fGVufDB8fDB8fHww" alt="Bebidas" class="specialty-img">
+        <div class="specialty-content">
+          <h3 class="specialty-title">Cócteles Exclusivos</h3>
+          <p class="specialty-desc">Bebidas preparadas por nuestros mixólogos expertos, perfectas para acompañar tu comida o disfrutar en nuestra barra.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" data-aos="fade-up">
+    <h2 class="section-title">Nuestro Espacio</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Restaurante" class="gallery-img">
+      </div>
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
+        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Barra" class="gallery-img">
+      </div>
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
+        <img src="https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Terraza" class="gallery-img">
+      </div>
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Sala VIP" class="gallery-img">
+      </div>
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
+        <img src="https://images.unsplash.com/photo-1659003341841-0b1d8c464539?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Vista al mar" class="gallery-img">
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials" data-aos="fade-up">
+    <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+    <div class="testimonial-slider">
+      <div class="testimonial" data-aos="fade-up" data-aos-delay="100">
+        <p class="testimonial-text">"Una experiencia culinaria excepcional. Cada plato es una obra de arte que deleita todos los sentidos. El servicio es impecable y la atención al detalle es incomparable."</p>
+        <div class="testimonial-author">— Ana Martínez</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reviews" data-aos="fade-up">
+    <div class="review-card" data-aos="fade-right" data-aos-delay="100">
+      <p>"Una experiencia sublime. El servicio impecable y los sabores únicos. Volveremos sin duda."</p>
+      <div class="review-author">— Ana Martínez</div>
+    </div>
+    <div class="review-card" data-aos="fade-up" data-aos-delay="200">
+      <p>"Ambiente refinado y comida exquisita. Uno de los mejores restaurantes que he visitado."</p>
+      <div class="review-author">— Carlos Domínguez</div>
+    </div>
+    <div class="review-card" data-aos="fade-left" data-aos-delay="300">
+      <p>"Ideal para ocasiones especiales. Todo perfecto desde la entrada hasta el postre."</p>
+      <div class="review-author">— Laura Fernández</div>
+    </div>
+  </section>
+
+  <div class="reserve-cta">
+    <h3>¿Listo para una experiencia culinaria inolvidable?</h3>
+    <p>¡Reserve su mesa hoy y disfrute de nuestra exquisita cocina! Nuestro equipo está listo para hacer de su visita una experiencia memorable.</p>
+    <a href="reservas.html" class="reserve-btn">Reservar Ahora</a>
+  </div>
+
+  <footer>
+    &copy; 2025 L'Restaurant. Todos los derechos reservados.
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    // Inicializar AOS (Animate On Scroll)
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      mirror: false
+    });
+
+    // Navegación suave
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Efecto de carga suave
+    document.body.style.opacity = '0';
+    window.addEventListener('load', () => {
+      document.body.style.transition = 'opacity 0.8s ease-in-out';
+      document.body.style.opacity = '1';
+    });
+  </script>
+</body>
+</html>

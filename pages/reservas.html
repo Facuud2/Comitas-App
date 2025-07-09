@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reservas - L'Restaurant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div class="back-to-home">
+    <a href="../index.html" class="back-btn">
+      <i>←</i> Volver al Inicio
+    </a>
+  </div>
+
+  <div class="reservation-container">
+    <header class="reservation-header" data-aos="fade-up">
+      <h1>Reserva tu Mesa</h1>
+      <p>Complete el siguiente formulario para realizar su reserva. Nos pondremos en contacto para confirmar la disponibilidad.</p>
+    </header>
+
+    <div class="reservation-form-container" data-aos="fade-up" data-aos-delay="100">
+      <div class="form-image">
+      </div>
+      
+      <form class="reservation-form" id="reservationForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fechaReserva">Fecha y Hora *</label>
+            <input type="datetime-local" id="fechaReserva" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="responsable">Nombre del Responsable *</label>
+            <input type="text" id="responsable" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="localId">Local *</label>
+            <select id="localId" class="form-control" required>
+              <option value="">Seleccione un local...</option>
+              <option value="1">Local Centro</option>
+              <option value="2">Local Norte</option>
+              <option value="3">Local Sur</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="metodoPago">Método de Pago *</label>
+            <select id="metodoPago" class="form-control" required>
+              <option value="">Seleccione...</option>
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="DEBITO">Tarjeta de Débito</option>
+              <option value="VISA">Visa</option>
+              <option value="MASTERCARD">MasterCard</option>
+              <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" class="form-control" rows="4" placeholder="Detalles adicionales de la reserva (alergias, preferencias, etc.)"></textarea>
+        </div>
+
+        <!-- Campo oculto para el ID del usuario (se llenará dinámicamente) -->
+        <input type="hidden" id="usuarioId" value="1">
+
+        <button type="submit" class="btn-submit">Confirmar Reserva</button>
+      </form>
+    </div>
+
+    <div class="reservation-info" data-aos="fade-up" data-aos-delay="200">
+      <h3>Información Importante</h3>
+      <p>• Las reservas se mantendrán por 15 minutos después de la hora acordada.</p>
+      <p>• Para grupos de 8 o más personas, favor contactarnos directamente.</p>
+      <p>• Código de vestimenta: Elegante casual.</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="../js/reservas.js"></script>
+  <script>
+    // Inicializar AOS
+    document.addEventListener('DOMContentLoaded', function() {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+      });
+    });
+  </script>
+
+  
+</body>
+</html>
