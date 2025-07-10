@@ -913,51 +913,50 @@
         }
 
         try {
-          const response = await fetch("https://comitas-app-backend.onrender.com/login", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({ login: username, pass: password })
-          });
+  const response = await fetch("https://comitas-app-backend.onrender.com/login", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ login: username, pass: password })
+  });
 
-          if (!response.ok) {
-            loginError.textContent = 'Credenciales inválidas. Intente nuevamente.';
-            return;
-          }
+  const responseBody = await response.text(); // primero obtenemos texto para evitar errores de parsing
+  let data = {};
 
-          const data = await response.json();
-          localStorage.setItem("JWTtoken", data.token); // si tu backend devuelve el token así
+  try {
+    data = JSON.parse(responseBody);
+  } catch (err) {
+    loginError.textContent = 'Respuesta inválida del servidor.';
+    console.error("No se pudo parsear JSON:", responseBody);
+    return;
+  }
 
-          if (data.token) {
-            // Simular autenticación exitosa
-            isLoggedIn = true;
-            currentUser = username;
-            
-            // Guardar en localStorage
-            const sessionData = { username, isLoggedIn: true };
-            localStorage.setItem('userSession', JSON.stringify(sessionData));
-            
-            // Actualizar la interfaz
-            loginBtn.textContent = 'Cerrar Sesión';
-            userGreeting.textContent = `¡Hola, ${username}!`;
-            userGreeting.style.display = 'block';
-            
-            // Mostrar botón de reserva
-            if (reserveBtn) reserveBtn.style.display = 'inline-block';
-            
-            // Cerrar el modal y limpiar el formulario
-            loginModal.style.display = 'none';
-            loginForm.reset();
-            loginError.textContent = '';
-          } else {
-            loginError.textContent = 'Error en la autenticación. Intente nuevamente.';
-          }
-        } catch (error) {
-          console.error('Error al iniciar sesión:', error);
-          loginError.textContent = 'Error al conectar con el servidor. Intente nuevamente.';
-        }
+  if (!response.ok || !data.token) {
+    loginError.textContent = 'Credenciales inválidas. Intente nuevamente.';
+    return;
+  }
+
+  // Guardar token y usuario
+  localStorage.setItem("JWTtoken", data.token);
+  localStorage.setItem('userSession', JSON.stringify({ username, id: data.id, isLoggedIn: true }));
+
+  // Marcar sesión como iniciada
+  isLoggedIn = true;
+  currentUser = username;
+  loginBtn.textContent = 'Cerrar Sesión';
+  userGreeting.textContent = `¡Hola, ${username}!`;
+  userGreeting.style.display = 'block';
+  if (reserveBtn) reserveBtn.style.display = 'inline-block';
+  
+  loginModal.style.display = 'none';
+  loginForm.reset();
+  loginError.textContent = '';
+
+} catch (error) {
+  console.error('Error al iniciar sesión:', error);
+  loginError.textContent = 'Error de red. Intente nuevamente más tarde.';
+}
       } else {
         // Mostrar mensaje de error
         loginError.textContent = 'Por favor, completa todos los campos';
