@@ -893,7 +893,7 @@
       }
     });
 
-    // Manejar envío del formulario
+    // Manejar el envío del formulario de login
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -930,39 +930,39 @@
           const data = await response.json();
           localStorage.setItem("JWTtoken", data.token); // si tu backend devuelve el token así
 
+          if (data.token) {
+            // Simular autenticación exitosa
+            isLoggedIn = true;
+            currentUser = username;
+            
+            // Guardar en localStorage
+            const sessionData = { username, isLoggedIn: true };
+            localStorage.setItem('userSession', JSON.stringify(sessionData));
+            
+            // Actualizar la interfaz
+            loginBtn.textContent = 'Cerrar Sesión';
+            userGreeting.textContent = `¡Hola, ${username}!`;
+            userGreeting.style.display = 'block';
+            
+            // Mostrar botón de reserva
+            if (reserveBtn) reserveBtn.style.display = 'inline-block';
+            
+            // Cerrar el modal y limpiar el formulario
+            loginModal.style.display = 'none';
+            loginForm.reset();
+            loginError.textContent = '';
+          } else {
+            loginError.textContent = 'Error en la autenticación. Intente nuevamente.';
+          }
         } catch (error) {
-          console.error("Error al loguear:", error);
+          console.error('Error al iniciar sesión:', error);
+          loginError.textContent = 'Error al conectar con el servidor. Intente nuevamente.';
         }
-
-    if (data.success) {
-      // Simular autenticación exitosa
-      isLoggedIn = true;
-      currentUser = username;
-      
-      // Guardar en localStorage
-        const sessionData = { username, isLoggedIn: true };
-        localStorage.setItem('userSession', JSON.stringify(sessionData));
-        
-        // Actualizar la interfaz
-        loginBtn.textContent = 'Cerrar Sesión';
-        userGreeting.textContent = `¡Hola, ${username}!`;
-        userGreeting.style.display = 'block';
-        
-        // Mostrar botón de reserva
-        if (reserveBtn) reserveBtn.style.display = 'inline-block';
-        
-        // Cerrar el modal y limpiar el formulario
-        loginModal.style.display = 'none';
-        loginForm.reset();
-        loginError.textContent = '';
       } else {
         // Mostrar mensaje de error
         loginError.textContent = 'Por favor, completa todos los campos';
       }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      loginError.textContent = 'Error al iniciar sesión. Intente nuevamente.';
-    }}
+    });
 
     // Verificar si hay una sesión activa al cargar la página
     window.addEventListener('load', () => {
@@ -984,7 +984,7 @@
           if (reserveBtn) reserveBtn.style.display = 'inline-block';
         }
       }
-    })});
+    });
   </script>
 </body>
 </html>
