@@ -901,18 +901,7 @@
       const password = document.getElementById('password').value.trim();
 
       // Validación simple (en un caso real, esto sería una llamada a un servidor)
-      if (username && password) {
-        if (username.length < 3) {
-          loginError.textContent = 'El usuario debe tener al menos 3 caracteres';
-          return;
-        }
-        
-        if (password.length < 6) {
-          loginError.textContent = 'La contraseña debe tener al menos 6 caracteres';
-          return;
-        }
-
-        try {
+      try {
   const response = await fetch("https://comitas-app-backend.onrender.com/login", {
     method: 'POST',
     headers: {
@@ -933,7 +922,7 @@
     return;
   }
 
-  if (!response.ok || !data.token) {
+  if (!response.ok || !data.JWTtoken) {
     loginError.textContent = 'Credenciales inválidas. Intente nuevamente.';
     return;
   }
@@ -958,10 +947,6 @@
   console.error('Error al iniciar sesión:', error);
   loginError.textContent = 'Error de red. Intente nuevamente más tarde.';
 }
-      } else {
-        // Mostrar mensaje de error
-        loginError.textContent = 'Por favor, completa todos los campos';
-      }
     });
 
     // Verificar si hay una sesión activa al cargar la página
