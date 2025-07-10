@@ -407,6 +407,71 @@
         font-size: 0.95rem;
       }
     }
+    /* Estilos para el modal de login */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 30px;
+      border-radius: 8px;
+      max-width: 400px;
+      position: relative;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .error-message {
+      color: #d32f2f;
+      margin-bottom: 15px;
+      min-height: 20px;
+    }
+
+    /* Estilo para el botón de reserva */
+    .reserve-btn {
+      display: none;
+      margin-left: 10px;
+    }
   </style>
 </head>
 <body>
@@ -415,6 +480,8 @@
     <div class="logo">L'Restaurant</div>
     <nav>
       <a href="index.html" class="btn">Inicio</a>
+      <button id="loginBtn" class="btn" style="cursor: pointer;">Iniciar Sesión</button>
+      <div id="userGreeting" style="display: none; color: #8b4513; font-weight: bold;"></div>
       <a href="#" class="btn">Locales</a>
       <a href="pages/reservas.html" class="btn">Hacer una reserva</a>
     </nav>
@@ -520,17 +587,35 @@
     &copy; 2025 L'Restaurant. Todos los derechos reservados.
   </footer>
 
+  <!-- Modal de Login -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Iniciar Sesión</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Usuario:</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div id="loginError" class="error-message"></div>
+        <button type="submit" class="btn">Ingresar</button>
+      </form>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   <script>
-    // Inicializar AOS (Animate On Scroll)
+    // Inicializar AOS
     AOS.init({
       duration: 800,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
+      once: true
     });
 
-    // Navegación suave
+    // Variables globales ya declaradas más arriba
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
@@ -544,12 +629,131 @@
       });
     });
 
-    // Efecto de carga suave
-    document.body.style.opacity = '0';
+    // Variables globales para el login
+    let isLoggedIn = false;
+    let currentUser = '';
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const userGreeting = document.getElementById('userGreeting');
+    const closeBtn = document.querySelector('.close');
+    const reserveBtn = document.querySelector('.reserve-btn');
+
+    // Mostrar modal de login
+    loginBtn.addEventListener('click', () => {
+      if (!isLoggedIn) {
+        loginModal.style.display = 'block';
+      } else {
+        // Cerrar sesión
+        isLoggedIn = false;
+        currentUser = '';
+        loginBtn.textContent = 'Iniciar Sesión';
+        userGreeting.style.display = 'none';
+        if (reserveBtn) reserveBtn.style.display = 'none';
+        localStorage.removeItem('userSession');
+      }
+    });
+
+    // Cerrar modal al hacer clic en la X
+    closeBtn.addEventListener('click', () => {
+      loginModal.style.display = 'none';
+      loginError.textContent = '';
+    });
+
+    // Cerrar modal al hacer clic fuera del contenido
+    window.addEventListener('click', (e) => {
+      if (e.target === loginModal) {
+        loginModal.style.display = 'none';
+        loginError.textContent = '';
+      }
+    });
+
+    // Manejar envío del formulario
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      // Validación simple (en un caso real, esto sería una llamada a un servidor)
+      if (username && password) {
+        if (username.length < 3) {
+          loginError.textContent = 'El usuario debe tener al menos 3 caracteres';
+          return;
+        }
+        
+        if (password.length < 6) {
+          loginError.textContent = 'La contraseña debe tener al menos 6 caracteres';
+          return;
+        }
+
+        try {
+          const response = await fetch("https://comitas-app-backend.onrender.com/login", {
+            method: 'POST',
+            headers: {
+        'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ login: username, pass: password })
+          });
+
+    if (!response.ok) {
+      loginError.textContent = 'Credenciales inválidas. Intente nuevamente.';
+      return;
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      // Simular autenticación exitosa
+      isLoggedIn = true;
+      currentUser = username;
+      
+      // Guardar en localStorage
+        const sessionData = { username, isLoggedIn: true };
+        localStorage.setItem('userSession', JSON.stringify(sessionData));
+        
+        // Actualizar la interfaz
+        loginBtn.textContent = 'Cerrar Sesión';
+        userGreeting.textContent = `¡Hola, ${username}!`;
+        userGreeting.style.display = 'block';
+        
+        // Mostrar botón de reserva
+        if (reserveBtn) reserveBtn.style.display = 'inline-block';
+        
+        // Cerrar el modal y limpiar el formulario
+        loginModal.style.display = 'none';
+        loginForm.reset();
+        loginError.textContent = '';
+      } else {
+        // Mostrar mensaje de error
+        loginError.textContent = 'Por favor, completa todos los campos';
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      loginError.textContent = 'Error al iniciar sesión. Intente nuevamente.';
+    }}
+
+    // Verificar si hay una sesión activa al cargar la página
     window.addEventListener('load', () => {
+      // Efecto de carga suave
+      document.body.style.opacity = '0';
       document.body.style.transition = 'opacity 0.8s ease-in-out';
       document.body.style.opacity = '1';
-    });
+      
+      // Verificar sesión guardada
+      const savedSession = localStorage.getItem('userSession');
+      if (savedSession) {
+        const sessionData = JSON.parse(savedSession);
+        if (sessionData.isLoggedIn && sessionData.username) {
+          isLoggedIn = true;
+          currentUser = sessionData.username;
+          loginBtn.textContent = 'Cerrar Sesión';
+          userGreeting.textContent = `¡Hola, ${currentUser}!`;
+          userGreeting.style.display = 'block';
+          if (reserveBtn) reserveBtn.style.display = 'inline-block';
+        }
+      }
+    })});
   </script>
 </body>
 </html>
