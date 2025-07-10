@@ -938,7 +938,7 @@
   }
 
   // Guardar token y usuario
-  localStorage.setItem("JWTtoken", data.token);
+  localStorage.setItem("token", data.JWTtoken);
   localStorage.setItem('userSession', JSON.stringify({ username, id: data.id, isLoggedIn: true }));
 
   // Marcar sesión como iniciada
