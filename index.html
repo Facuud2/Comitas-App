@@ -926,6 +926,7 @@
 
   try {
     data = JSON.parse(responseBody);
+    console.log(data);
   } catch (err) {
     loginError.textContent = 'Respuesta inválida del servidor.';
     console.error("No se pudo parsear JSON:", responseBody);
@@ -938,7 +939,7 @@
   }
 
   // Guardar token y usuario
-  localStorage.setItem("token", data.JWTtoken);
+  localStorage.setItem("JWTtoken", data.JWTtoken);
   localStorage.setItem('userSession', JSON.stringify({ username, id: data.id, isLoggedIn: true }));
 
   // Marcar sesión como iniciada
