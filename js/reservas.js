@@ -40,91 +40,152 @@ function validarFechaHora(fechaHora) {
 }
 
 // Inicialización cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-  const ahora = new Date();
-  const inputFecha = document.getElementById('fechaReserva');
-  const form = document.getElementById('reservationForm');
+// document.addEventListener('DOMContentLoaded', function() {
+//   const ahora = new Date();
+//   const inputFecha = document.getElementById('fechaReserva');
+//   const form = document.getElementById('reservationForm');
   
-  // Establecer la fecha mínima (hoy o el próximo día válido)
-  let fechaMinima = new Date(ahora);
-  fechaMinima.setHours(ahora.getHours() + 2); // Mínimo 2 horas en el futuro
+//   // Establecer la fecha mínima (hoy o el próximo día válido)
+//   let fechaMinima = new Date(ahora);
+//   fechaMinima.setHours(ahora.getHours() + 2); // Mínimo 2 horas en el futuro
   
-  // Si la fecha mínima no es un día válido, ir al próximo día válido
-  if (!esDiaValido(fechaMinima)) {
-    fechaMinima = obtenerProximoDiaValido(fechaMinima);
-  } else {
-    // Si es un día válido pero fuera del horario, ajustar a la hora de apertura
-    if (fechaMinima.getHours() < 19) {
-      fechaMinima.setHours(19, 0, 0, 0);
-    } else if (fechaMinima.getHours() >= 23) {
-      // Si es después de las 23:00, ir al próximo día
-      fechaMinima.setDate(fechaMinima.getDate() + 1);
-      fechaMinima = obtenerProximoDiaValido(fechaMinima);
-    }
+//   // Si la fecha mínima no es un día válido, ir al próximo día válido
+//   if (!esDiaValido(fechaMinima)) {
+//     fechaMinima = obtenerProximoDiaValido(fechaMinima);
+//   } else {
+//     // Si es un día válido pero fuera del horario, ajustar a la hora de apertura
+//     if (fechaMinima.getHours() < 19) {
+//       fechaMinima.setHours(19, 0, 0, 0);
+//     } else if (fechaMinima.getHours() >= 23) {
+//       // Si es después de las 23:00, ir al próximo día
+//       fechaMinima.setDate(fechaMinima.getDate() + 1);
+//       fechaMinima = obtenerProximoDiaValido(fechaMinima);
+//     }
+//   }
+  
+//   // Formatear para input datetime-local (YYYY-MM-DDThh:mm)
+//   inputFecha.min = fechaMinima.toISOString().slice(0, 16);
+  
+//   // Establecer un valor por defecto (mínimo)
+//   inputFecha.value = fechaMinima.toISOString().slice(0, 16);
+  
+//   // Validar al cambiar la fecha/hora
+//   inputFecha.addEventListener('input', function() {
+//     const validacion = validarFechaHora(this.value);
+//     if (!validacion.valido) {
+//       alert(validacion.mensaje);
+//       // Restaurar al valor mínimo permitido
+//       this.value = inputFecha.min;
+//     }
+//   });
+  
+//   // Manejar envío del formulario
+//   form.addEventListener('submit', async function(e) {
+//     e.preventDefault();
+    
+//     // Validar fecha y hora antes de enviar
+//     const fechaHora = document.getElementById('fechaReserva').value;
+//     const validacion = validarFechaHora(fechaHora);
+
+//     const userSession = JSON.parse(localStorage.getItem('userSession'));
+// const usuarioId = userSession?.id;
+
+//     if (!validacion.valido) {
+//       alert(validacion.mensaje);
+//       return;
+//     }
+    
+//     // Obtener valores del formulario
+//     const reservaData = {
+//       fechaReserva: fechaHora,
+//       descripcion: document.getElementById('descripcion').value,
+//       responsable: document.getElementById('responsable').value,
+//       metodoPago: document.getElementById('metodoPago').value,
+//       localDTO: {
+//         id: parseInt(document.getElementById('localId').value)
+//       },
+//       usuarioDTO: {
+//         id: parseInt(document.getElementById('usuarioId').value)
+//       }
+//     };
+
+//     try {
+//       // Aquí iría la URL de tu API
+//       const response = await fetch('https://comitas-app-backend.onrender.com/reservas', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${localStorage.getItem("JWTtoken")}`
+//         },
+//         body: JSON.stringify(reservaData)
+//       });
+
+//       if (!response.ok) {
+//         throw new Error('Error al realizar la reserva');
+//       }
+
+//       const result = await response.json();
+//       alert(`¡Reserva confirmada con éxito! ID: ${result.id}`);
+//       form.reset();
+//     } catch (error) {
+//       console.error('Error:', error);
+//       alert('Ocurrió un error al procesar su reserva. Por favor, intente nuevamente.');
+//     }
+//   });
+// });
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const userSession = JSON.parse(localStorage.getItem('userSession'));
+  const token = localStorage.getItem('JWTtoken');
+
+  if (!userSession || !token) {
+    alert('Debe iniciar sesión para hacer una reserva.');
+    return;
   }
-  
-  // Formatear para input datetime-local (YYYY-MM-DDThh:mm)
-  inputFecha.min = fechaMinima.toISOString().slice(0, 16);
-  
-  // Establecer un valor por defecto (mínimo)
-  inputFecha.value = fechaMinima.toISOString().slice(0, 16);
-  
-  // Validar al cambiar la fecha/hora
-  inputFecha.addEventListener('input', function() {
-    const validacion = validarFechaHora(this.value);
-    if (!validacion.valido) {
-      alert(validacion.mensaje);
-      // Restaurar al valor mínimo permitido
-      this.value = inputFecha.min;
+
+  // Validar fecha y hora
+  const fechaHora = document.getElementById('fechaReserva').value;
+  const validacion = validarFechaHora(fechaHora);
+  if (!validacion.valido) {
+    alert(validacion.mensaje);
+    return;
+  }
+
+  const reservaData = {
+    fechaReserva: fechaHora,
+    descripcion: document.getElementById('descripcion').value,
+    responsable: document.getElementById('responsable').value,
+    metodoPago: document.getElementById('metodoPago').value,
+    localDTO: {
+      id: parseInt(document.getElementById('localId').value)
+    },
+    usuarioDTO: {
+      id: parseInt(userSession.id)
     }
-  });
-  
-  // Manejar envío del formulario
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    // Validar fecha y hora antes de enviar
-    const fechaHora = document.getElementById('fechaReserva').value;
-    const validacion = validarFechaHora(fechaHora);
-    if (!validacion.valido) {
-      alert(validacion.mensaje);
-      return;
-    }
-    
-    // Obtener valores del formulario
-    const reservaData = {
-      fechaReserva: fechaHora,
-      descripcion: document.getElementById('descripcion').value,
-      responsable: document.getElementById('responsable').value,
-      metodoPago: document.getElementById('metodoPago').value,
-      localDTO: {
-        id: parseInt(document.getElementById('localId').value)
+  };
+
+  try {
+    const response = await fetch('https://comitas-app-backend.onrender.com/reservas', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
-      usuarioDTO: {
-        id: parseInt(document.getElementById('usuarioId').value)
-      }
-    };
+      body: JSON.stringify(reservaData)
+    });
 
-    try {
-      // Aquí iría la URL de tu API
-      const response = await fetch('http://tu-api.com/api/reservas', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reservaData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al realizar la reserva');
-      }
-
-      const result = await response.json();
-      alert(`¡Reserva confirmada con éxito! ID: ${result.id}`);
-      form.reset();
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Ocurrió un error al procesar su reserva. Por favor, intente nuevamente.');
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error: ${response.status} - ${errorText}`);
     }
-  });
+
+    const result = await response.json();
+    alert(`¡Reserva confirmada con éxito! ID: ${result.id}`);
+    form.reset();
+  } catch (error) {
+    console.error('Error en la reserva:', error);
+    alert('Ocurrió un error al procesar su reserva. Por favor, intente nuevamente.');
+  }
 });
