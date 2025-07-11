@@ -32,16 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Procesando`;
   
-      const token = userData.token;
-    
-      const userId = userData.id;
-  
       const reserva = {
         fechaReserva: document.getElementById('fechaReserva').value,
         descripcion: document.getElementById('descripcion').value || 'Sin comentarios',
         responsable: document.getElementById('responsable').value,
         metodoPago: document.getElementById('metodoPago').value,
-        localDTO: { localId: parseInt(localSelect.value) },
+        localDTO: { localId: document.getElementById('localId').value },
         usuarioDTO: { id: userId }
       };
   
