@@ -730,7 +730,7 @@
             const userData = JSON.parse(localStorage.getItem('userData') || 'null');
             const loginNavItem = document.getElementById('loginNavItem');
             const navBar = document.querySelector('.navbar-nav');
-            const reservarNavItem = document.querySelector('a[href="#reservas"]').closest('li');
+            const reservarNavItem = document.querySelector('a[href="reservas.html"]').closest('li');
             
             if (userData?.isLoggedIn && loginNavItem && navBar) {
                 // Remove login and reservation buttons
