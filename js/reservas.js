@@ -127,35 +127,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Validar rango de fecha/hora permitido
   function validarFechaHora(fecha) {
-  const dia = fecha.getDay(); // 0 = domingo ... 6 = sábado
-  const hora = fecha.getHours();
-  const minutos = fecha.getMinutes();
+    // Asegurarse de trabajar con la hora local de Argentina (GMT-3)
+    const fechaLocal = new Date(fecha);
+    const dia = fechaLocal.getDay(); // 0 = domingo ... 6 = sábado
+    const hora = fechaLocal.getHours();
+    const minutos = fechaLocal.getMinutes();
 
-  // Días permitidos: Jueves (4), Viernes (5), Sábado (6), Domingo (0)
-  if (![0, 4, 5, 6].includes(dia)) {
-    return {
-      valido: false,
-      mensaje: 'Solo se aceptan reservas de Jueves a Domingo.'
-    };
+    // Días permitidos: Jueves (4), Viernes (5), Sábado (6), Domingo (0)
+    if (![0, 4, 5, 6].includes(dia)) {
+      return {
+        valido: false,
+        mensaje: 'Solo se aceptan reservas de Jueves a Domingo.'
+      };
+    }
+
+    // Rango horario: desde 19:00 (inclusive) hasta 23:01 (hora de Argentina)
+    if (hora < 19 || hora > 23 || (hora === 23 && minutos > 1)) {
+      return {
+        valido: false,
+        mensaje: 'Horario permitido: entre las 19:00 y 23:00 hs (hora Argentina).'
+      };
+    }
+
+    return { valido: true };
   }
 
-  // Rango horario: desde 19:00 (inclusive) hasta antes de las 23:00
-  if (hora < 19 || (hora === 23 && minutos > 0) || hora >= 23) {
-    return {
-      valido: false,
-      mensaje: 'Horario permitido: entre las 19:00 y 22:59 hs.'
-    };
-  }
 
-  return { valido: true };
-}
-
-
-    // Validar horario (19:00 a 22:59)
-    if (hora < 19 || hora >= 23) {
+    // Validar horario (19:00 a 23:00) en hora de Argentina
+    const fechaLocal = new Date();
+    const horaLocal = fechaLocal.getHours();
+    const minutosLocal = fechaLocal.getMinutes();
+    
+    if (horaLocal < 19 || horaLocal > 23 || (horaLocal === 23 && minutosLocal > 1)) {
       return { 
         valido: false, 
-        mensaje: 'El horario permitido es de 19:00 a 23:00 hs.' 
+        mensaje: 'El horario permitido es de 19:00 a 23:00 hs (hora Argentina).' 
       };
     }
 
@@ -183,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reserva = {
       fechaReserva: document.getElementById('fechaReserva').value,
       descripcion: document.getElementById('descripcion').value || 'Sin comentarios',
-      responsable: responsableInput.value,
+      responsable: document.getElementById('responsable').value,
       metodoPago: document.getElementById('metodoPago').value,
       localDTO: { id: parseInt(localSelect.value) },
       usuarioDTO: { id: userId }
