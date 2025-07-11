@@ -102,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Asegurarse de trabajar con la hora local de Argentina (GMT-3)
     const fechaLocal = new Date(fecha);
     const dia = fechaLocal.getDay(); // 0 = domingo ... 6 = sábado
-    const hora = fechaLocal.getHours();
-    const minutos = fechaLocal.getMinutes();
+    const horaLocal = fechaLocal.getHours();
+    const minutosLocal = fechaLocal.getMinutes();
 
     // Días permitidos: Jueves (4), Viernes (5), Sábado (6), Domingo (0)
     if (![0, 4, 5, 6].includes(dia)) {
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Rango horario: desde 19:00 (inclusive) hasta 23:01 (hora de Argentina)
-    if (hora < 19 || hora > 23 || (hora === 23 && minutos > 1)) {
+    if (horaLocal  < 19 || horaLocal > 23 || (horaLocal === 23 && minutosLocal > 1)) {
       return {
         valido: false,
         mensaje: 'Horario permitido: entre las 19:00 y 23:00 hs (hora Argentina).'
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Validar que no sea después de las 22:45 (para permitir al menos 15 minutos de servicio)
-    if (hora === 22 && minutos > 45) {
+    if (horaLocal === 22 && minutosLocal > 45) {
       return { 
         valido: false, 
         mensaje: 'La última reserva posible es a las 22:45 hs.' 
