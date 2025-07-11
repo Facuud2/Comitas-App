@@ -440,6 +440,7 @@
             
             // Populate locations select
             const localSelect = document.getElementById('localId');
+            const localLabel = document.getElementById('localId');
             if (localSelect) {
                 // Clear existing options except the first one (placeholder)
                 while (localSelect.options.length > 1) {
@@ -474,7 +475,7 @@
                         responsable: document.getElementById('responsable').value,
                         metodoPago: document.getElementById('metodoPago').value,
                         localDTO: {
-                            id: parseInt(document.getElementById('localId').value)
+                            id: localSelect.value
                         },
                         usuarioDTO: {
                             id: userData.id
