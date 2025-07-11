@@ -258,7 +258,7 @@
                 loggedInItem.className = 'nav-item ms-lg-3';
                 loggedInItem.innerHTML = `
                     <span class="btn btn-outline-light disabled">
-                        <i class="fas fa-user-check me-2"></i>${userSession.nombre || 'Usuario'}
+                        <i class="fas fa-user-check me-2"></i>${userData.username || 'Usuario'}
                     </span>
                 `;
                 
@@ -279,8 +279,8 @@
                 // Logout functionality
                 document.getElementById('logoutBtn').addEventListener('click', (e) => {
                     e.preventDefault();
-                    localStorage.removeItem('userSession');
-                    localStorage.removeItem('JWTtoken');
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('token');
                     window.location.href = 'index.html';
                 });
             } else {
