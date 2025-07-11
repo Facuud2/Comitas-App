@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Sabores del Sur</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --accent-color: #e2c044;
+            --light-color: #f5f5f5;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(226, 192, 68, 0.25);
+        }
+        
+        .btn-login {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.6rem 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+        
+        .btn-login:hover {
+            background-color: #1e4620;
+            transform: translateY(-2px);
+        }
+        
+        .form-floating > label {
+            padding: 1rem 0.75rem;
+        }
+        
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            transform: scale(0.8) translateY(-0.5rem) translateX(0.15rem);
+            opacity: 0.8;
+        }
+        
+        .back-to-home {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+        
+        .back-to-home a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .back-to-home a:hover {
+            color: #1e4620;
+        }
+        
+        .back-to-home i {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-to-home">
+        <a href="index.html">
+            <i class="fas fa-arrow-left"></i> Volver al Inicio
+        </a>
+    </div>
+    
+    <div class="container">
+        <div class="login-container">
+            <div class="login-logo">
+                <h1>Sabores del Sur</h1>
+                <p class="text-muted">Inicia sesión en tu cuenta</p>
+            </div>
+            
+            <form id="loginForm" class="needs-validation" novalidate>
+                <div id="loginAlert" class="alert d-none" role="alert"></div>
+                
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="username" placeholder="usuario" required>
+                    <label for="username">Nombre de usuario</label>
+                    <div class="invalid-feedback">
+                        Por favor ingresa tu nombre de usuario.
+                    </div>
+                </div>
+                
+                
+                <div class="form-floating mb-4">
+                    <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
+                    <label for="password">Contraseña</label>
+                    <div class="invalid-feedback">
+                        Por favor ingresa tu contraseña.
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Recordarme
+                        </label>
+                    </div>
+                    <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-login mb-3" id="loginButton">
+                    <span class="spinner-border spinner-border-sm d-none" id="spinner" role="status" aria-hidden="true"></span>
+                    <span id="buttonText">Iniciar Sesión</span>
+                </button>
+                
+                <div class="text-center mt-3">
+                    <p class="mb-0">¿No tienes una cuenta? <a href="#" class="text-decoration-none">Regístrate</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const alertDiv = document.getElementById('loginAlert');
+            const loginButton = document.getElementById('loginButton');
+            const spinner = document.getElementById('spinner');
+            const buttonText = document.getElementById('buttonText');
+        
+            const API_URL = 'https://comitas-app-backend.onrender.com'; // ← Cambiá esta URL si es necesario
+        
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+        
+                // Validación HTML5
+                if (!form.checkValidity()) {
+                    e.stopPropagation();
+                    form.classList.add('was-validated');
+                    return;
+                }
+        
+                // Mostrar spinner y desactivar botón
+                loginButton.disabled = true;
+                spinner.classList.remove('d-none');
+                buttonText.textContent = 'Iniciando sesión...';
+        
+                // Obtener valores del formulario
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+        
+                try {
+                    const response = await fetch(API_URL + '/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ login: username, pass: password })
+                    });
+        
+                    // Validar respuesta
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            throw new Error('Credenciales inválidas.');
+                        } else {
+                            throw new Error('Error de servidor. Intenta nuevamente más tarde.');
+                        }
+                    }
+        
+                    const data = await response.json();
+        
+                    console.log(data);
+
+                    // Guardar los datos en localStorage
+                    localStorage.setItem('userData', JSON.stringify({
+                        username: data.username,
+                        id: data.id,
+                        token: data.token,
+                        isLoggedIn: true,
+                        loginTime: new Date().toISOString()
+                    }));
+        
+                    showAlert('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
+        
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+        
+                } catch (error) {
+                    console.error('Login error:', error.message);
+                    showAlert(error.message, 'danger');
+                } finally {
+                    // Restaurar el estado del botón
+                    loginButton.disabled = false;
+                    spinner.classList.add('d-none');
+                    buttonText.textContent = 'Iniciar Sesión';
+                }
+            });
+        
+            // Función para mostrar alertas UX-friendly
+            function showAlert(message, type) {
+                alertDiv.textContent = message;
+                alertDiv.className = `alert alert-${type} mt-3`;
+                alertDiv.classList.remove('d-none');
+        
+                // Ocultar después de 5s si no es "success"
+                if (type !== 'success') {
+                    setTimeout(() => {
+                        alertDiv.classList.add('d-none');
+                    }, 5000);
+                }
+            }
+        });
+        </script>
+        
+</body>
+</html>
