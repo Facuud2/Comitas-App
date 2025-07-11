@@ -233,23 +233,23 @@
             });
             
             // Check user session and update UI
-            const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+            const userData = JSON.parse(localStorage.getItem('userData') || 'null');
             const token = localStorage.getItem('token');
             const loginNavItem = document.getElementById('loginNavItem');
             const responsableInput = document.getElementById('responsable');
             
-            if (!userSession || !token) {
+            if (!userData || !token) {
                 // Redirect to login if not authenticated
                 window.location.href = 'login.html';
                 return;
             }
             
             // Pre-fill the responsible field with user's name if available
-            if (userSession.nombre) {
-                responsableInput.value = userSession.nombre;
+            if (userData.username) {
+                responsableInput.value = userData.username;
             }
             
-            if (userSession && token && loginNavItem) {
+            if (userData && token && loginNavItem) {
                 // Remove login button
                 const loginItem = loginNavItem.closest('li');
                 
