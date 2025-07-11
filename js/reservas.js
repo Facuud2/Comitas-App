@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     return { valido: true };
-  }
+  });
 
   // Manejo del formulario
   const form = document.getElementById('reservationForm');
@@ -313,4 +313,3 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.innerHTML = originalText;
     }
   });
-});
