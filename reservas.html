@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas - L'Restaurant</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #e2c044;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+            padding-top: 76px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .reservation-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1414235077428-338989a6da0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 50px;
+        }
+
+        .reservation-form {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(44, 95, 45, 0.25);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 30px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e4620;
+            border-color: #1e4620;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        .time-slot {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-slot:hover, .time-slot.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .time-slots-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">L'Restaurant</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="reservas.html">Reservas</a>
+                    </li>
+                    <li class="nav-item ms-lg-3" id="loginNavItem">
+                        <a class="btn btn-outline-primary" href="login.html">Iniciar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="reservation-hero text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">Reserva tu Mesa</h1>
+            <p class="lead">Disfruta de una experiencia gastronómica excepcional</p>
+        </div>
+    </section>
+
+    <!-- Reservation Form -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="reservation-form">
+                    <h2 class="text-center mb-4">Completa tus datos</h2>
+                    <form id="reservationForm">
+                        <input type="hidden" id="localId" value="1">
+                        
+                        <div class="mb-4">
+                            <label for="fechaReserva" class="form-label required-field">Fecha y hora de la reserva</label>
+                            <input type="datetime-local" class="form-control" id="fechaReserva" required>
+                            <small class="form-text text-muted">Horario de atención: Jueves a Domingo de 19:00 a 23:00 hs</small>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <label for="responsable" class="form-label required-field">Nombre del responsable</label>
+                                <input type="text" class="form-control" id="responsable" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="metodoPago" class="form-label required-field">Método de pago</label>
+                                <select class="form-select" id="metodoPago" required>
+                                    <option value="" selected disabled>Seleccione un método de pago...</option>
+                                    <option value="EFECTIVO">Efectivo</option>
+                                    <option value="VISA">Visa</option>
+                                    <option value="MASTERCARD">MasterCard</option>
+                                    <option value="AMEX">American Express</option>
+                                    <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="descripcion" class="form-label">Descripción o comentarios adicionales</label>
+                            <textarea class="form-control" id="descripcion" rows="3" placeholder="Ej: Alergias, preferencias, celebración especial, etc."></textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Confirmar Reserva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; 2025 L'Restaurant. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Include reservas.js -->
+    <script src="js/reservas.js"></script>
+    
+    <script>
+        // Initialize date picker with business rules
+        document.addEventListener('DOMContentLoaded', function() {
+            const ahora = new Date();
+            const inputFecha = document.getElementById('fechaReserva');
+            
+            // Set minimum date (2 hours from now or next valid day)
+            let fechaMinima = new Date(ahora);
+            fechaMinima.setHours(ahora.getHours() + 2);
+            
+            // Format for datetime-local input (YYYY-MM-DDThh:mm)
+            inputFecha.min = fechaMinima.toISOString().slice(0, 16);
+            
+            // Set initial value to minimum allowed
+            inputFecha.value = fechaMinima.toISOString().slice(0, 16);
+            
+            // Add validation on input change
+            inputFecha.addEventListener('input', function() {
+                const validacion = validarFechaHora(new Date(this.value));
+                if (!validacion.valido) {
+                    alert(validacion.mensaje);
+                    // Reset to minimum allowed value
+                    this.value = inputFecha.min;
+                }
+            });
+            
+            // Check user session and update UI
+            const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+            const token = localStorage.getItem('token');
+            const loginNavItem = document.getElementById('loginNavItem');
+            const responsableInput = document.getElementById('responsable');
+            
+            if (!userSession || !token) {
+                // Redirect to login if not authenticated
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Pre-fill the responsible field with user's name if available
+            if (userSession.nombre) {
+                responsableInput.value = userSession.nombre;
+            }
+            
+            if (userSession && token && loginNavItem) {
+                // Remove login button
+                const loginItem = loginNavItem.closest('li');
+                
+                // Create logged in message
+                const loggedInItem = document.createElement('li');
+                loggedInItem.className = 'nav-item ms-lg-3';
+                loggedInItem.innerHTML = `
+                    <span class="btn btn-outline-light disabled">
+                        <i class="fas fa-user-check me-2"></i>${userSession.nombre || 'Usuario'}
+                    </span>
+                `;
+                
+                // Replace login button with logged in message
+                loginItem.replaceWith(loggedInItem);
+                
+                // Add logout button
+                const logoutItem = document.createElement('li');
+                logoutItem.className = 'nav-item ms-lg-2';
+                logoutItem.innerHTML = `
+                    <button class="btn btn-outline-light" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                    </button>
+                `;
+                
+                loginNavItem.parentNode.insertBefore(logoutItem, loggedInItem.nextSibling);
+                
+                // Logout functionality
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('userSession');
+                    localStorage.removeItem('JWTtoken');
+                    window.location.href = 'index.html';
+                });
+            } else {
+                // Redirect to login if not authenticated
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>
