@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L'Restaurant - Reservas</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Estilos personalizados (puede separarse en un .css en el futuro) -->
+  <style>
+    :root {
+      --primary-color: #8b5a2b;
+      --secondary-color: #d4af37;
+      --dark-color: #1a1a1a;
+      --light-color: #f8f9fa;
+      --accent-color: #a52a2a;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f5f0;
+      padding-top: 80px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      padding: 15px 0;
+    }
+
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary-color) !important;
+    }
+
+    .nav-link {
+      color: var(--dark-color) !important;
+      font-weight: 500;
+      margin: 0 8px;
+    }
+
+    .hero-section {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+      height: 50vh;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .restaurant-name {
+      font-size: 3.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .reservation-form {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+      margin-top: -80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn-submit {
+      background-color: var(--primary-color);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      color: white;
+      font-weight: 500;
+      text-transform: uppercase;
+      width: 100%;
+    }
+
+    .btn-submit:hover {
+      background-color: #6d4622;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 50px 0 20px;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">L'<span style="color: var(--secondary-color)">Restaurant</span></a>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto" id="navUserSection">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
+          <li class="nav-item ms-lg-3" id="loginNavItem">
+            <a class="btn btn-outline-primary" href="login.html">Iniciar Sesión</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="restaurant-name">Reserva tu Mesa</div>
+      <p class="lead fs-4">Vive una experiencia culinaria inolvidable</p>
+    </div>
+  </section>
+
+  <!-- Formulario de Reserva -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="reservation-form">
+            <h2 class="text-center mb-4">Completa tus datos</h2>
+            <p class="text-center text-muted mb-4">Te confirmaremos la disponibilidad en breve.</p>
+
+            <form id="reservationForm">
+              <div class="mb-4">
+                <label for="localId" class="form-label">Sucursal *</label>
+                <select class="form-select" id="localId" required>
+                  <option value="" disabled selected>Seleccione una sucursal...</option>
+                  <!-- Opciones cargadas dinámicamente -->
+                </select>
+              </div>
+
+              <div class="mb-4">
+                <label for="fechaReserva" class="form-label">Fecha y hora *</label>
+                <input type="datetime-local" class="form-control" id="fechaReserva" required />
+                <small class="form-text text-muted">Horario de reservas: Jueves a Domingo de 19:00 a 23:00 hs</small>
+                <small class="form-text text-muted">Permitido unicamente una reserva por dia</small>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label for="responsable" class="form-label">Responsable *</label>
+                  <input type="text" class="form-control" id="responsable" required />
+                </div>
+                <div class="col-md-6">
+                  <label for="metodoPago" class="form-label">Método de pago *</label>
+                  <select class="form-select" id="metodoPago" required>
+                    <option value="" disabled selected>Seleccione un método...</option>
+                    <option value="EFECTIVO">Efectivo</option>
+                    <option value="VISA">Visa</option>
+                    <option value="MASTERCARD">MasterCard</option>
+                    <option value="AMEX">American Express</option>
+                    <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="descripcion" class="form-label">Comentarios</label>
+                <textarea class="form-control" id="descripcion" rows="3" placeholder="Alergias, celebración especial, etc."></textarea>
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-submit">
+                  <i class="far fa-calendar-check me-2"></i>Confirmar Reserva
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-white text-center">
+    <div class="container">
+      <p>&copy; 2025 L'Restaurant. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS + SweetAlert2 + tu lógica -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/reservas.js"></script>
+</body>
+</html>
