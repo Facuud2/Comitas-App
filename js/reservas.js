@@ -94,9 +94,21 @@ document.addEventListener('DOMContentLoaded', () => {
       now.setHours(19, 0, 0, 0);
     }
     
+    // Configurar el valor mínimo (fecha y hora actual o próxima disponible)
     const minFecha = now.toISOString().slice(0, 16);
+    
+    // Configurar el valor máximo (23:00 del día seleccionado)
+    const maxDate = new Date(now);
+    maxDate.setHours(23, 0, 0, 0);
+    const maxFecha = maxDate.toISOString().slice(0, 16);
+    
+    // Aplicar los valores al input
     fechaInput.min = minFecha;
+    fechaInput.max = maxFecha;
     fechaInput.value = minFecha;
+    
+    // Forzar la actualización del input en móviles
+    fechaInput.type = 'datetime-local';
 
     fechaInput.addEventListener('input', () => {
       const selectedDate = new Date(fechaInput.value);
