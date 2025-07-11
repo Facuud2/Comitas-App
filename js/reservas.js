@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descripcion: document.getElementById('descripcion').value || 'Sin comentarios',
         responsable: document.getElementById('responsable').value,
         metodoPago: document.getElementById('metodoPago').value,
-        localDTO: { localId: document.getElementById('localId').value },
+        localDTO: { id: document.getElementById('localId').value },
         usuarioDTO: { id: userId }
       };
   
