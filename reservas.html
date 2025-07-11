@@ -4,103 +4,239 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservas - L'Restaurant</title>
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c5f2d;
-            --secondary-color: #97bc62;
-            --accent-color: #e2c044;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
+            --primary-color: #8B5A2B; /* Warm brown */
+            --secondary-color: #D4AF37; /* Gold */
+            --dark-color: #1A1A1A;
+            --light-color: #F8F9FA;
+            --accent-color: #A52A2A; /* Dark red */
         }
-
+        
         body {
             font-family: 'Poppins', sans-serif;
             color: #333;
-            background-color: #f8f9fa;
-            padding-top: 76px;
+            background-color: #f9f5f0;
+            padding-top: 80px;
         }
-
+        
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
-            font-weight: 700;
+            font-weight: 600;
         }
-
+        
         .navbar {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            padding: 15px 0;
         }
-
-        .reservation-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('https://images.unsplash.com/photo-1414235077428-338989a6da0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
-            color: white;
-            padding: 100px 0;
-            margin-bottom: 50px;
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
         }
-
-        .reservation-form {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-bottom: 50px;
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color) !important;
+            margin: 0 8px;
+            transition: color 0.3s ease;
         }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(44, 95, 45, 0.25);
+        
+        .nav-link:hover {
+            color: var(--primary-color) !important;
         }
-
+        
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
-            padding: 10px 30px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #6d4622;
+            border-color: #6d4622;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-light {
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        
+        .restaurant-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .restaurant-l {
+            font-style: italic;
+            color: var(--secondary-color);
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: var(--secondary-color);
+            bottom: -10px;
+            left: 25%;
+        }
+        
+        .reservation-form {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+            margin-top: -80px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .form-control, .form-select {
+            padding: 12px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 90, 43, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        
+        .required-field:after {
+            content: ' *';
+            color: var(--accent-color);
+        }
+        
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
         }
-
-        .btn-primary:hover {
-            background-color: #1e4620;
-            border-color: #1e4620;
+        
+        .btn-submit:hover {
+            background-color: #6d4622;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-
-        .form-label {
-            font-weight: 500;
-            margin-bottom: 8px;
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 100px;
         }
-
-        .required-field::after {
-            content: " *";
-            color: #dc3545;
+        
+        .footer-links a {
+            color: #aaa;
+            margin: 0 10px;
+            transition: color 0.3s ease;
         }
-
-        .time-slot {
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            padding: 10px 15px;
-            margin: 5px;
-            cursor: pointer;
+        
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin: 0 5px;
+            color: white;
             transition: all 0.3s ease;
         }
-
-        .time-slot:hover, .time-slot.selected {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+        
+        .social-icons a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
         }
-
-        .time-slots-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 15px 0;
+        
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                height: 40vh;
+            }
+            
+            .restaurant-name {
+                font-size: 2.5rem;
+            }
+            
+            .reservation-form {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -108,9 +244,8 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="index.html">L'Restaurant</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="index.html">L'<span style="color: var(--secondary-color);">Restaurant</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -119,7 +254,7 @@
                         <a class="nav-link" href="index.html">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="reservas.html">Reservas</a>
+                        <a class="nav-link" href="reservas.html">Reservas</a>
                     </li>
                     <li class="nav-item ms-lg-3" id="loginNavItem">
                         <a class="btn btn-outline-primary" href="login.html">Iniciar Sesión</a>
@@ -130,55 +265,87 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="reservation-hero text-center">
+    <section class="hero-section">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-4">Reserva tu Mesa</h1>
-            <p class="lead">Disfruta de una experiencia gastronómica excepcional</p>
+            <div class="restaurant-name">
+                <span class="restaurant-l">Reserva</span> tu Mesa
+            </div>
+            <p class="lead fs-4">Vive una experiencia culinaria inolvidable</p>
         </div>
     </section>
 
     <!-- Reservation Form -->
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="reservation-form">
-                    <h2 class="text-center mb-4">Completa tus datos</h2>
-                    <form id="reservationForm">
-                        <input type="hidden" id="localId" value="1">
-                        
-                        <div class="mb-4">
-                            <label for="fechaReserva" class="form-label required-field">Fecha y hora de la reserva</label>
-                            <input type="datetime-local" class="form-control" id="fechaReserva" required>
-                            <small class="form-text text-muted">Horario de atención: Jueves a Domingo de 19:00 a 23:00 hs</small>
-                        </div>
-                        
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3">
-                                <label for="responsable" class="form-label required-field">Nombre del responsable</label>
-                                <input type="text" class="form-control" id="responsable" required>
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="reservation-form">
+                        <h2 class="text-center mb-4 section-title">Completa tus datos</h2>
+                        <p class="text-center text-muted mb-4">Por favor, completa el siguiente formulario para realizar tu reserva. Te confirmaremos la disponibilidad en breve.</p>
+                        <form id="reservationForm">
+                            <!-- Local selection is now a visible dropdown above -->
+                            <div class="mb-4">
+                                <label for="localId" class="form-label required-field">Sucursal</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-store"></i></span>
+                                    <select class="form-select" id="localId" required>
+                                        <option value="" selected disabled>Seleccione una sucursal...</option>
+                                        <option value="1">Sucursal Centro</option>
+                                        <option value="2">Sucursal Norte</option>
+                                        <option value="3">Sucursal Sur</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="metodoPago" class="form-label required-field">Método de pago</label>
-                                <select class="form-select" id="metodoPago" required>
-                                    <option value="" selected disabled>Seleccione un método de pago...</option>
-                                    <option value="EFECTIVO">Efectivo</option>
-                                    <option value="VISA">Visa</option>
-                                    <option value="MASTERCARD">MasterCard</option>
-                                    <option value="AMEX">American Express</option>
-                                    <option value="TRANSFERENCIA">Transferencia Bancaria</option>
-                                </select>
+                            
+                            <div class="mb-4">
+                                <label for="fechaReserva" class="form-label required-field">Fecha y hora de la reserva</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    <input type="datetime-local" class="form-control" id="fechaReserva" required>
+                                </div>
+                                <small class="form-text text-muted"><i class="far fa-clock me-1"></i> Horario de atención: Jueves a Domingo de 19:00 a 23:00 hs</small>
                             </div>
-                        </div>
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label for="responsable" class="form-label required-field">Nombre del responsable</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                                        <input type="text" class="form-control" id="responsable" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="metodoPago" class="form-label required-field">Método de pago</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="far fa-credit-card"></i></span>
+                                        <select class="form-select" id="metodoPago" required>
+                                            <option value="" selected disabled>Seleccione un método de pago...</option>
+                                            <option value="EFECTIVO">Efectivo</option>
+                                            <option value="VISA">Visa</option>
+                                            <option value="MASTERCARD">MasterCard</option>
+                                            <option value="AMEX">American Express</option>
+                                            <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="mb-4">
-                            <label for="descripcion" class="form-label">Descripción o comentarios adicionales</label>
-                            <textarea class="form-control" id="descripcion" rows="3" placeholder="Ej: Alergias, preferencias, celebración especial, etc."></textarea>
-                        </div>
+                            <div class="mb-4">
+                                <label for="descripcion" class="form-label">
+                                    <i class="far fa-comment-dots me-2"></i>Descripción o comentarios adicionales
+                                </label>
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="descripcion" style="height: 100px" placeholder="Ej: Alergias, preferencias, celebración especial, etc."></textarea>
+                                    <label for="descripcion">Ej: Alergias, preferencias, celebración especial, etc.</label>
+                                </div>
+                            </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Confirmar Reserva</button>
-                        </div>
-                    </form>
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-submit">
+                                    <i class="far fa-calendar-check me-2"></i>Confirmar Reserva
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -206,7 +373,18 @@
     <!-- Include reservas.js -->
     <script src="js/reservas.js"></script>
     
+    <!-- SweetAlert2 for beautiful alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
+        // API Configuration
+        const API_URL = 'https://comitas-app-backend.onrender.com';
+        
+        // Available locations (could be fetched from API in a real scenario)
+        const locations = [
+            { id: 1, name: 'Sucursal Centro' }
+        ];
+        
         // Initialize date picker with business rules
         document.addEventListener('DOMContentLoaded', function() {
             const ahora = new Date();
@@ -237,9 +415,7 @@
             const token = userData.token;
             const loginNavItem = document.getElementById('loginNavItem');
             const responsableInput = document.getElementById('responsable');
-            
-            console.log(userData);
-            console.log(token);
+        
 
             if (!userData || !token) {
                 // Redirect to login if not authenticated
@@ -251,6 +427,107 @@
             if (userData.username) {
                 responsableInput.value = userData.username;
             }
+            
+            // Populate locations select
+            const localSelect = document.getElementById('localId');
+            if (localSelect) {
+                // Clear existing options except the first one (placeholder)
+                while (localSelect.options.length > 1) {
+                    localSelect.remove(1);
+                }
+                
+                // Add location options
+                locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location.id;
+                    option.textContent = location.name;
+                    localSelect.appendChild(option);
+                });
+            }
+            
+            // Handle form submission
+            const form = document.getElementById('reservationForm');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+                
+                try {
+                    // Get form data
+                    const reservaData = {
+                        fechaReserva: document.getElementById('fechaReserva').value,
+                        descripcion: document.getElementById('descripcion').value || 'Sin comentarios adicionales',
+                        responsable: document.getElementById('responsable').value,
+                        metodoPago: document.getElementById('metodoPago').value,
+                        localDTO: {
+                            id: parseInt(document.getElementById('localId').value)
+                        },
+                        usuarioDTO: {
+                            id: userData.id || 1 // Use user ID from session or fallback to 1
+                        }
+                    };
+                    
+                    // Validate required fields
+                    if (!reservaData.fechaReserva || !reservaData.responsable || !reservaData.metodoPago) {
+                        throw new Error('Por favor complete todos los campos requeridos');
+                    }
+                    
+                    // Validate date/time
+                    const fechaReserva = new Date(reservaData.fechaReserva);
+                    const validacion = validarFechaHora(fechaReserva);
+                    if (!validacion.valido) {
+                        throw new Error(validacion.mensaje);
+                    }
+                    
+                    // Send POST request
+                    const response = await fetch(API_URL + '/reservas', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(reservaData)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Error al procesar la reserva');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    // Show success message
+                    await Swal.fire({
+                        title: '¡Reserva exitosa!',
+                        text: `Tu reserva ha sido confirmada con el ID interno: ${result.id}`,
+                        icon: 'success',
+                        confirmButtonColor: 'var(--primary-color)'
+                    });
+                    
+                    // Reset form
+                    form.reset();
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    
+                    // Show error message
+                    await Swal.fire({
+                        title: 'Error',
+                        text: error.message || 'Ocurrió un error al procesar tu reserva. Por favor, inténtalo de nuevo.',
+                        icon: 'error',
+                        confirmButtonColor: 'var(--primary-color)'
+                    });
+                    
+                } finally {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            });
             
             if (userData && token && loginNavItem) {
                 // Remove login button
@@ -268,24 +545,6 @@
                 // Replace login button with logged in message
                 loginItem.replaceWith(loggedInItem);
                 
-                // Add logout button
-                const logoutItem = document.createElement('li');
-                logoutItem.className = 'nav-item ms-lg-2';
-                logoutItem.innerHTML = `
-                    <button class="btn btn-outline-light" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-                    </button>
-                `;
-                
-                loginNavItem.parentNode.insertBefore(logoutItem, loggedInItem.nextSibling);
-                
-                // Logout functionality
-                document.getElementById('logoutBtn').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    localStorage.removeItem('userData');
-                    localStorage.removeItem('token');
-                    window.location.href = 'index.html';
-                });
             } else {
                 // Redirect to login if not authenticated
                 window.location.href = 'login.html';
