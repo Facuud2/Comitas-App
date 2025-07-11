@@ -71,46 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (fechaInput) {
     const now = new Date();
     
-    // Si es un día no válido (lunes a miércoles), saltar al jueves
-    const dia = now.getDay();
-    if (![0, 4, 5, 6].includes(dia)) {
-      const diasHastaJueves = (4 - dia + 7) % 7;
-      now.setDate(now.getDate() + diasHastaJueves);
-      now.setHours(19, 0, 0, 0);
-    } 
-    // Si es un día válido pero ya pasó la hora de cierre, ir al día siguiente
-    else if (now.getHours() >= 23 || (now.getHours() === 23 && now.getMinutes() > 1)) {
-      now.setDate(now.getDate() + 1);
-      now.setHours(19, 0, 0, 0);
-      
-      // Verificar si el día siguiente es un día no válido (lunes a miércoles)
-      if (![0, 4, 5, 6].includes(now.getDay())) {
-        const diasHastaJueves = (4 - now.getDay() + 7) % 7;
-        now.setDate(now.getDate() + diasHastaJueves);
-      }
-    }
-    // Si es un día válido y estamos dentro del horario de atención
-    else if (now.getHours() < 19) {
-      now.setHours(19, 0, 0, 0);
-    }
+    // Configurar la fecha mínima como hoy
+    const today = now.toISOString().split('T')[0];
+    fechaInput.min = today + 'T00:00';
     
-    // Configurar el valor mínimo (fecha y hora actual o próxima disponible)
-    const minFecha = now.toISOString().slice(0, 16);
+    // Establecer la fecha actual como valor por defecto
+    fechaInput.value = now.toISOString().slice(0, 16);
     
-    // Configurar el valor máximo (23:00 del día seleccionado)
-    const maxDate = new Date(now);
-    maxDate.setHours(23, 0, 0, 0);
-    const maxFecha = maxDate.toISOString().slice(0, 16);
-    
-    // Aplicar los valores al input
-    fechaInput.min = minFecha;
-    fechaInput.max = maxFecha;
-    fechaInput.value = minFecha;
-    
-    // Forzar la actualización del input en móviles
-    fechaInput.type = 'datetime-local';
-
-    fechaInput.addEventListener('input', () => {
+    // Validar cuando el usuario seleccione una fecha/hora
+    fechaInput.addEventListener('change', () => {
       const selectedDate = new Date(fechaInput.value);
       const valid = validarFechaHora(selectedDate);
       
@@ -118,27 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         Swal.fire({
           icon: 'warning',
           title: 'Horario no disponible',
-          text: valid.mensaje,
+          text: 'Por favor, selecciona un horario entre 19:00 y 23:00 hs de Jueves a Domingo.',
           confirmButtonColor: 'var(--primary-color)'
         });
         
-        // Ajustar automáticamente a la próxima hora permitida
-        if (selectedDate.getHours() < 19) {
-          selectedDate.setHours(19, 0, 0, 0);
-        } else if (selectedDate.getHours() >= 23 || (selectedDate.getHours() === 23 && selectedDate.getMinutes() > 1)) {
-          selectedDate.setDate(selectedDate.getDate() + 1);
-          selectedDate.setHours(19, 0, 0, 0);
-        }
-        
-        // Si el día no es válido (lunes a miércoles), saltar al jueves
-        const dia = selectedDate.getDay();
-        if (![0, 4, 5, 6].includes(dia)) {
-          const diasHastaJueves = (4 - dia + 7) % 7;
-          selectedDate.setDate(selectedDate.getDate() + diasHastaJueves);
-          selectedDate.setHours(19, 0, 0, 0);
-        }
-        
-        fechaInput.value = selectedDate.toISOString().slice(0, 16);
+        // No ajustamos automáticamente, solo mostramos el mensaje
+        fechaInput.value = ''; // Limpiar el campo para que el usuario elija otra vez
       }
     });
   }
