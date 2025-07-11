@@ -404,7 +404,7 @@
             inputFecha.addEventListener('input', function() {
                 const validacion = validarFechaHora(new Date(this.value));
                 if (!validacion.valido) {
-                    alert(validacion.mensaje);
+                    
                     // Reset to minimum allowed value
                     this.value = inputFecha.min;
                 }
@@ -477,7 +477,7 @@
                             id: parseInt(document.getElementById('localId').value)
                         },
                         usuarioDTO: {
-                            id: userData.id || 1 // Use user ID from session or fallback to 1
+                            id: userData.id
                         }
                     };
                     
