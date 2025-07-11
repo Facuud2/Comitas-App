@@ -70,21 +70,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const fechaInput = document.getElementById('fechaReserva');
   if (fechaInput) {
     const now = new Date();
-    now.setHours(now.getHours() + 2); // mínimo 2 horas después
     
-    // Ajustar a la próxima hora permitida si es necesario
-    if (now.getHours() < 19) {
-      now.setHours(19, 0, 0, 0);
-    } else if (now.getHours() >= 23) {
-      now.setDate(now.getDate() + 1);
-      now.setHours(19, 0, 0, 0);
-    }
-    
-    // Asegurar que sea un día válido (jueves a domingo)
+    // Si es un día no válido (lunes a miércoles), saltar al jueves
     const dia = now.getDay();
     if (![0, 4, 5, 6].includes(dia)) {
       const diasHastaJueves = (4 - dia + 7) % 7;
       now.setDate(now.getDate() + diasHastaJueves);
+      now.setHours(19, 0, 0, 0);
+    } 
+    // Si es un día válido pero ya pasó la hora de cierre, ir al día siguiente
+    else if (now.getHours() >= 23 || (now.getHours() === 23 && now.getMinutes() > 1)) {
+      now.setDate(now.getDate() + 1);
+      now.setHours(19, 0, 0, 0);
+      
+      // Verificar si el día siguiente es un día no válido (lunes a miércoles)
+      if (![0, 4, 5, 6].includes(now.getDay())) {
+        const diasHastaJueves = (4 - now.getDay() + 7) % 7;
+        now.setDate(now.getDate() + diasHastaJueves);
+      }
+    }
+    // Si es un día válido y estamos dentro del horario de atención
+    else if (now.getHours() < 19) {
       now.setHours(19, 0, 0, 0);
     }
     
@@ -107,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Ajustar automáticamente a la próxima hora permitida
         if (selectedDate.getHours() < 19) {
           selectedDate.setHours(19, 0, 0, 0);
-        } else if (selectedDate.getHours() >= 23) {
+        } else if (selectedDate.getHours() >= 23 || (selectedDate.getHours() === 23 && selectedDate.getMinutes() > 1)) {
           selectedDate.setDate(selectedDate.getDate() + 1);
           selectedDate.setHours(19, 0, 0, 0);
         }
