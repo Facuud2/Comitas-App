@@ -417,7 +417,7 @@
             const responsableInput = document.getElementById('responsable');
         
 
-            if (!userData || !token) {
+            if (userData === null || token === null) {
                 // Redirect to login if not authenticated
                 window.location.href = 'login.html';
                 return;
