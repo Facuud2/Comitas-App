@@ -328,6 +328,30 @@ document.addEventListener('DOMContentLoaded', () => {
       usuarioDTO: { id: userId }
     };
 
+    async function verificarReservaExistente(usuarioId, fechaISO, token) {
+      const fechaSoloDia = fechaISO.split('T')[0]; // yyyy-MM-dd
+    
+      const url = `${API_URL}/usuarios/${usuarioId}/reserva-dia?fecha=${fechaSoloDia}`;
+    
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    
+      if (!response.ok) {
+        throw new Error('No se pudo verificar si ya existe una reserva.');
+      }
+    
+      const data = await response.json();
+      return data.tieneReserva; // true o false
+    }
+
+    const tieneReserva = await verificarReservaExistente(userId, reserva.fechaReserva, token);
+    if (tieneReserva) {
+      throw new Error('Ya tienes una reserva para esta fecha.');
+    }
+
     try {
       // Validaciones adicionales
       if (!reserva.fechaReserva || !reserva.metodoPago || !reserva.responsable || !reserva.localDTO.id) {
@@ -337,7 +361,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const validacion = validarFechaHora(new Date(reserva.fechaReserva));
       if (!validacion.valido) {
         throw new Error(validacion.mensaje);
+      
       }
+      
+      // Verificación con el backend: ¿Ya existe reserva ese día?
+      const yaTieneReserva = await verificarReservaExistente(userId, reserva.fechaReserva, token);
+      if (yaTieneReserva) {
+        throw new Error('Ya tienes una reserva registrada para esa fecha.');
+      }
+
 
       const response = await fetch(`${API_URL}/reservas`, {
         method: 'POST',
