@@ -127,17 +127,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Validar rango de fecha/hora permitido
   function validarFechaHora(fecha) {
-    const dia = fecha.getDay(); // 0 = Domingo, 6 = Sábado
-    const hora = fecha.getHours();
-    const minutos = fecha.getMinutes();
+  const dia = fecha.getDay(); // 0 = domingo ... 6 = sábado
+  const hora = fecha.getHours();
+  const minutos = fecha.getMinutes();
 
-    // Validar día de la semana
-    if (![0, 4, 5, 6].includes(dia)) {
-      return { 
-        valido: false, 
-        mensaje: 'Solo se aceptan reservas de Jueves a Domingo.' 
-      };
-    }
+  // Días permitidos: Jueves (4), Viernes (5), Sábado (6), Domingo (0)
+  if (![0, 4, 5, 6].includes(dia)) {
+    return {
+      valido: false,
+      mensaje: 'Solo se aceptan reservas de Jueves a Domingo.'
+    };
+  }
+
+  // Rango horario: desde 19:00 (inclusive) hasta antes de las 23:00
+  if (hora < 19 || (hora === 23 && minutos > 0) || hora >= 23) {
+    return {
+      valido: false,
+      mensaje: 'Horario permitido: entre las 19:00 y 22:59 hs.'
+    };
+  }
+
+  return { valido: true };
+}
+
 
     // Validar horario (19:00 a 22:59)
     if (hora < 19 || hora >= 23) {
