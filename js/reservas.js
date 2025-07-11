@@ -357,6 +357,9 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const yaTieneReserva = await verificarReservaExistente(userId, reserva.fechaReserva, token);
       if (yaTieneReserva) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        
         await Swal.fire({
           icon: 'warning',
           title: '¡Reserva existente!',
@@ -374,6 +377,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (error) {
       console.warn('No se pudo verificar reservas existentes:', error);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
       // Continuar con el proceso a pesar del error en la verificación
     }
 
