@@ -330,26 +330,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function verificarReservaExistente(usuarioId, fechaISO, token) {
       const fechaSoloDia = fechaISO.split('T')[0]; // yyyy-MM-dd
-    
-      const url = `${API_URL}/usuarios/${usuarioId}/reserva-dia?fecha=${fechaSoloDia}`;
-    
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      
+      try {
+        const url = `${API_URL}/usuarios/${usuarioId}/reserva-dia?fecha=${fechaSoloDia}`;
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Error al verificar reservas existentes');
         }
-      });
-    
-      if (!response.ok) {
-        throw new Error('No se pudo verificar si ya existe una reserva.');
+        
+        const data = await response.json();
+        return data.tieneReserva; // true o false
+      } catch (error) {
+        console.error('Error en verificarReservaExistente:', error);
+        throw error;
       }
-    
-      const data = await response.json();
-      return data.tieneReserva; // true o false
     }
 
-    const tieneReserva = await verificarReservaExistente(userId, reserva.fechaReserva, token);
-    if (tieneReserva) {
-      throw new Error('Ya tienes una reserva para esta fecha.');
+    // Verificar si ya tiene reserva para la fecha seleccionada
+    try {
+      const yaTieneReserva = await verificarReservaExistente(userId, reserva.fechaReserva, token);
+      if (yaTieneReserva) {
+        await Swal.fire({
+          icon: 'warning',
+          title: '¡Reserva existente!',
+          html: `
+            <p>Ya tienes una reserva registrada para el día seleccionado.</p>
+            <p class="mb-0">Si necesitas modificar tu reserva, por favor contacta con el restaurante.</p>
+          `,
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: 'var(--primary-color)',
+          customClass: {
+            confirmButton: 'swal-confirm-btn'
+          }
+        });
+        return; // Detener el proceso de reserva
+      }
+    } catch (error) {
+      console.warn('No se pudo verificar reservas existentes:', error);
+      // Continuar con el proceso a pesar del error en la verificación
     }
 
     try {
@@ -361,13 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const validacion = validarFechaHora(new Date(reserva.fechaReserva));
       if (!validacion.valido) {
         throw new Error(validacion.mensaje);
-      
-      }
-      
-      // Verificación con el backend: ¿Ya existe reserva ese día?
-      const yaTieneReserva = await verificarReservaExistente(userId, reserva.fechaReserva, token);
-      if (yaTieneReserva) {
-        throw new Error('Ya tienes una reserva registrada para esa fecha.');
       }
 
 
@@ -396,11 +414,33 @@ document.addEventListener('DOMContentLoaded', () => {
       form.reset();
       submitBtn.innerHTML = originalText;
     } catch (err) {
+      console.error('Error en el proceso de reserva:', err);
+      
+      let errorMessage = 'Ocurrió un error al procesar tu reserva.';
+      let errorTitle = 'Error';
+      
+      if (err.message.includes('tienes una reserva')) {
+        errorTitle = 'Reserva duplicada';
+        errorMessage = err.message;
+      } else if (err.message.includes('fecha no válida') || err.message.includes('horario permitido')) {
+        errorTitle = 'Fecha no disponible';
+        errorMessage = err.message;
+      } else if (err.message.includes('network') || err.message.includes('Failed to fetch')) {
+        errorMessage = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet.';
+      } else if (err.message.includes('complete todos los campos')) {
+        errorTitle = 'Campos incompletos';
+        errorMessage = err.message;
+      }
+      
       await Swal.fire({
         icon: 'error',
-        title: 'Oops...',
-        text: err.message || 'Ocurrió un error inesperado.',
-        confirmButtonColor: 'var(--primary-color)'
+        title: errorTitle,
+        text: errorMessage,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: 'var(--primary-color)',
+        customClass: {
+          confirmButton: 'swal-confirm-btn'
+        }
       });
     } finally {
       submitBtn.disabled = false;
