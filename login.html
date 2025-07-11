@@ -111,7 +111,7 @@
     <div class="container">
         <div class="login-container">
             <div class="login-logo">
-                <h1>Sabores del Sur</h1>
+                <h1>L'Restaurant</h1>
                 <p class="text-muted">Inicia sesión en tu cuenta</p>
             </div>
             
@@ -200,7 +200,7 @@
         
                     // Validar respuesta
                     if (!response.ok) {
-                        if (response.status === 401) {
+                        if (response.status === 403) {
                             throw new Error('Credenciales inválidas.');
                         } else {
                             throw new Error('Error de servidor. Intenta nuevamente más tarde.');
@@ -213,9 +213,9 @@
 
                     // Guardar los datos en localStorage
                     localStorage.setItem('userData', JSON.stringify({
-                        username: data.username,
+                        username: data.login,
                         id: data.id,
-                        token: data.token,
+                        token: data.JWTtoken,
                         isLoggedIn: true,
                         loginTime: new Date().toISOString()
                     }));

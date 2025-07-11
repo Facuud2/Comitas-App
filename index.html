@@ -700,6 +700,7 @@
     <script>
         // Navbar hide on scroll and login functionality
         document.addEventListener('DOMContentLoaded', function() {
+            
             // Navbar hide on scroll
             let lastScroll = 0;
             const navbar = document.querySelector('.navbar');
@@ -727,6 +728,7 @@
             
             // Login status check and UI update
             const userData = JSON.parse(localStorage.getItem('userData') || 'null');
+            console.log(userData)
             const loginNavItem = document.getElementById('loginNavItem');
             const navBar = document.querySelector('.navbar-nav');
             const reservarNavItem = document.querySelector('a[href="#reservas"]').closest('li');
