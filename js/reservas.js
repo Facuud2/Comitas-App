@@ -3,8 +3,6 @@ const API_URL = 'https://comitas-app-backend.onrender.com';
 // Sucursales disponibles (podrían venir de una API real)
 const LOCALS = [
   { id: 1, name: 'Sucursal Centro' },
-  { id: 2, name: 'Sucursal Norte' },
-  { id: 3, name: 'Sucursal Sur' }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,9 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  const token = userData.token;
   const username = userData.username;
   const userId = userData.id;
+  const token = userData.token;
 
   const responsableInput = document.getElementById('responsable');
   if (responsableInput && username) {
@@ -158,12 +156,16 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled = true;
     submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Procesando`;
 
+    const token = userData.token;
+  
+  const userId = userData.id;
+
     const reserva = {
       fechaReserva: document.getElementById('fechaReserva').value,
       descripcion: document.getElementById('descripcion').value || 'Sin comentarios',
       responsable: document.getElementById('responsable').value,
       metodoPago: document.getElementById('metodoPago').value,
-      localDTO: { id: parseInt(localSelect.value) },
+      localDTO: { localId: parseInt(localSelect.value) },
       usuarioDTO: { id: userId }
     };
 
