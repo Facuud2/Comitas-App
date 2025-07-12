@@ -1,0 +1,13 @@
+name: Keep Render Backend Alive
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # cada 5 minutos (horario UTC)
+  workflow_dispatch:       # también lo podés ejecutar manualmente
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend
+        run: curl -s https://comitas-app-backend.onrender.com/ping > /dev/null
