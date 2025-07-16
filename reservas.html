@@ -158,11 +158,27 @@
               </div>
 
               <div class="row mb-4">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label for="responsable" class="form-label">Responsable *</label>
                   <input type="text" class="form-control" id="responsable" required />
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                  <label for="cantidadPersonas" class="form-label">Cantidad de personas *</label>
+                  <select class="form-select" id="cantidadPersonas" required>
+                    <option value="" disabled selected>Seleccione...</option>
+                    <option value="2">2 personas</option>
+                    <option value="3">3 personas</option>
+                    <option value="4">4 personas</option>
+                    <option value="5">5 personas</option>
+                    <option value="6">6 personas</option>
+                    <option value="7">7 personas</option>
+                    <option value="8">8 personas</option>
+                    <option value="9">9 personas</option>
+                    <option value="10">10 personas</option>
+                    <option value="11">+10 personas</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
                   <label for="metodoPago" class="form-label">Método de pago *</label>
                   <select class="form-select" id="metodoPago" required>
                     <option value="" disabled selected>Seleccione un método...</option>

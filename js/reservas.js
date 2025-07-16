@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descripcion: document.getElementById('descripcion').value || 'Sin comentarios',
         responsable: document.getElementById('responsable').value,
         metodoPago: document.getElementById('metodoPago').value,
+        cantidadPersonas: parseInt(document.getElementById('cantidadPersonas').value),
         localDTO: { id: document.getElementById('localId').value },
         usuarioDTO: { id: userId }
       };
