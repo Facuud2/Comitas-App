@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const userId = userData.id;
   const token = userData.token;
 
-  if (isTokenExpired(userData.token)) {
+  if (isTokenExpired(token)) {
     Swal.fire({
       icon: 'warning',
       title: 'Sesión caducada',
@@ -147,6 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
           body: JSON.stringify(reserva)
         });
   
+        if (response.status === 401) {
+          throw new Error('expired_token'); // identificador personalizado
+        }
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Error al registrar la reserva.');
@@ -179,6 +183,19 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (err.message.includes('complete todos los campos')) {
           errorTitle = 'Campos incompletos';
           errorMessage = err.message;
+        }
+        
+        if (err.message === 'expired_token') {
+          await Swal.fire({
+            icon: 'warning',
+            title: 'Sesión caducada',
+            text: 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.',
+            confirmButtonText: 'Reiniciar sesión',
+            confirmButtonColor: 'var(--primary-color)'
+          });
+          localStorage.removeItem('userData');
+          window.location.href = 'login.html';
+          return;
         }
         
         await Swal.fire({
