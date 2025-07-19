@@ -116,8 +116,8 @@
         <ul class="navbar-nav ms-auto" id="navUserSection">
           <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
           <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
-          <li class="nav-item ms-lg-3" id="loginNavItem">
-            <a class="btn btn-outline-primary" href="login.html">Iniciar Sesión</a>
+          <li class="nav-item" id="loginNavItem">
+            <!-- Will be populated by JavaScript -->
           </li>
         </ul>
       </div>
@@ -203,6 +203,41 @@
   <!-- Bootstrap JS + SweetAlert2 + tu lógica -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // Update navbar based on login status
+    document.addEventListener('DOMContentLoaded', () => {
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const loginNavItem = document.getElementById('loginNavItem');
+      
+      if (userData && userData.token) {
+        // User is logged in
+        loginNavItem.innerHTML = `
+          <div class="dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-circle me-1"></i> ${userData.nombre || 'Usuario'}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="mis-reservas.html"><i class="fas fa-calendar-alt me-2"></i>Mis Reservas</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+            </ul>
+          </div>
+        `;
+        
+        // Add logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('userData');
+          window.location.href = 'index.html';
+        });
+      } else {
+        // User is not logged in
+        loginNavItem.innerHTML = `
+          <a class="btn btn-outline-primary" href="login.html">Iniciar Sesión</a>
+        `;
+      }
+    });
+  </script>
   <script src="js/reservas.js"></script>
 </body>
 </html>
