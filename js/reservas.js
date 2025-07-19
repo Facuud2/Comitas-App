@@ -5,6 +5,21 @@ const LOCALS = [
   { id: 1, name: 'Sucursal Centro' },
 ];
 
+function isTokenExpired(token) {
+  if (!token) return true;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])); // decodifica el payload
+    const exp = payload.exp; // UNIX timestamp en segundos
+    const now = Math.floor(Date.now() / 1000); // actual en segundos
+
+    return now > exp;
+  } catch (e) {
+    console.error('Error al verificar expiración del token:', e);
+    return true;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   if (!userData || !userData.token) {
