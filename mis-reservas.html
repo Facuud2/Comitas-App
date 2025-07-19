@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Reservas - L'Restaurant</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary-color: #2c5f2d;
+            --accent-color: #e2c044;
+            --light-color: #f5f5f5;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 15px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 1.25rem;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            border-top: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #234a24;
+            border-color: #234a24;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .status-badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .no-reservations {
+            text-align: center;
+            padding: 3rem 0;
+            color: #6c757d;
+        }
+        
+        .back-button {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">L'Restaurant</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reservas.html">Reservar</a>
+                    </li>
+                    <li class="nav-item" id="loginNavItem">
+                        <!-- Will be populated by JavaScript -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="back-button">
+            <a href="index.html" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Volver a Inicio
+            </a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Mis Reservas</h5>
+                <button id="refreshBtn" class="btn btn-sm btn-light">
+                    <i class="fas fa-sync-alt me-1"></i> Actualizar
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="loadingSpinner" class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+                
+                <div id="noReservations" class="no-reservations d-none">
+                    <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                    <h5>No tienes reservas realizadas</h5>
+                    <p class="text-muted">¡Haz tu primera reserva y aparecerá aquí!</p>
+                    <a href="index.html" class="btn btn-primary mt-2">Hacer una reserva</a>
+                </div>
+                
+                <div id="reservationsTable" class="table-responsive d-none">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha y Hora</th>
+                                <th>Sucursal</th>
+                                <th>Responsable</th>
+                                <th>Método de Pago</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsBody">
+                            <!-- Reservations will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            
+            // Redirect to login if not authenticated
+            if (!userData || !userData.token) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const { id: userId, username, token } = userData;
+            const API_URL = 'https://comitas-app-backend.onrender.com'; // Update with your API URL
+            
+            // Update navbar with user info
+            updateNavbar(username);
+            
+            // Load user reservations
+            loadReservations();
+            
+            // Add event listeners
+            document.getElementById('refreshBtn').addEventListener('click', loadReservations);
+            
+            // Function to load user reservations
+            async function loadReservations() {
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                const noReservations = document.getElementById('noReservations');
+                const reservationsTable = document.getElementById('reservationsTable');
+                
+                try {
+                    // Show loading spinner
+                    loadingSpinner.classList.remove('d-none');
+                    noReservations.classList.add('d-none');
+                    reservationsTable.classList.add('d-none');
+                    
+                    // Fetch reservations from API
+                    const response = await fetch(`${API_URL}/usuarios/${userId}/reservas`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Error al cargar las reservas');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Check if there are reservations
+                    if (!data.data || data.data.length === 0) {
+                        noReservations.classList.remove('d-none');
+                        return;
+                    }
+                    
+                    // Display reservations in table
+                    displayReservations(data.data);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudieron cargar las reservas. Por favor, intente nuevamente.',
+                        confirmButtonColor: 'var(--primary-color)'
+                    });
+                } finally {
+                    loadingSpinner.classList.add('d-none');
+                }
+            }
+            
+            // Function to display reservations in the table
+            function displayReservations(reservations) {
+                const tbody = document.getElementById('reservationsBody');
+                const reservationsTable = document.getElementById('reservationsTable');
+                
+                // Clear existing rows
+                tbody.innerHTML = '';
+                
+                // Add each reservation as a row
+                reservations.forEach(reservation => {
+                    const row = document.createElement('tr');
+                    
+                    // Format date
+                    const fechaReserva = new Date(reservation.fechaReserva);
+                    const formattedDate = fechaReserva.toLocaleString('es-AR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    // Get branch name
+                    const branchName = getBranchName(reservation.branch);
+                    
+                    // Create status badge
+                    const statusBadge = document.createElement('span');
+                    statusBadge.className = 'status-badge status-confirmed';
+                    statusBadge.textContent = 'Confirmada';
+                    
+                    // Create actions
+                    const actions = `
+                        <button class="btn btn-sm btn-outline-primary me-1 view-details" data-id="${reservation.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger cancel-reservation" data-id="${reservation.id}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    // Add cells to the row
+                    row.innerHTML = `
+                        <td>${reservation.id}</td>
+                        <td>${formattedDate}</td>
+                        <td>${branchName}</td>
+                        <td>${reservation.responsable}</td>
+                        <td>${reservation.metodoPago}</td>
+                        <td>${statusBadge.outerHTML}</td>
+                        <td>${actions}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                // Show the table
+                reservationsTable.classList.remove('d-none');
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.view-details').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const reservationId = e.target.closest('button').dataset.id;
+                        viewReservationDetails(reservationId);
+                    });
+                });
+                
+                document.querySelectorAll('.cancel-reservation').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const reservationId = e.target.closest('button').dataset.id;
+                        cancelReservation(reservationId);
+                    });
+                });
+            }
+            
+            // Function to get branch name by ID
+            function getBranchName(branchId) {
+                const branches = {
+                    1: 'Sucursal Centro',
+                    2: 'Sucursal Norte',
+                    3: 'Sucursal Sur'
+                };
+                return branches[branchId] || `Sucursal ${branchId}`;
+            }
+            
+            // Function to view reservation details
+            function viewReservationDetails(reservationId) {
+                // You can implement a modal or redirect to a details page
+                Swal.fire({
+                    title: 'Detalles de la Reserva',
+                    text: `Mostrando detalles de la reserva #${reservationId}`,
+                    icon: 'info',
+                    confirmButtonColor: 'var(--primary-color)'
+                });
+            }
+            
+            // Function to cancel a reservation
+            async function cancelReservation(reservationId) {
+                const result = await Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Esta acción no se puede deshacer',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, cancelar',
+                    cancelButtonText: 'No, mantener'
+                });
+                
+                if (result.isConfirmed) {
+                    try {
+                        // Here you would typically make an API call to cancel the reservation
+                        // For now, we'll just show a success message
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
+                        Swal.fire({
+                            title: '¡Cancelada!',
+                            text: 'La reserva ha sido cancelada.',
+                            icon: 'success',
+                            confirmButtonColor: 'var(--primary-color)'
+                        });
+                        
+                        // Reload reservations
+                        loadReservations();
+                        
+                    } catch (error) {
+                        console.error('Error al cancelar la reserva:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'No se pudo cancelar la reserva. Por favor, intente nuevamente.',
+                            icon: 'error',
+                            confirmButtonColor: 'var(--primary-color)'
+                        });
+                    }
+                }
+            }
+            
+            // Function to update navbar with user info
+            function updateNavbar(username) {
+                const loginNavItem = document.getElementById('loginNavItem');
+                if (loginNavItem) {
+                    loginNavItem.innerHTML = `
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i> ${username}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="mis-reservas.html"><i class="fas fa-calendar-alt me-2"></i>Mis Reservas</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    `;
+                    
+                    // Add logout event listener
+                    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('userData');
+                        window.location.href = 'index.html';
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
