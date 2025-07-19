@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://comitas-app-backend.onrender.com';
 
 // Sucursales disponibles (podrían venir de una API real)
 const LOCALS = [
