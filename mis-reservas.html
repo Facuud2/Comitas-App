@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Environment Variables -->
+    <script src="js/env.js"></script>
     <style>
         :root {
             --primary-color: #2c5f2d;
@@ -235,7 +237,8 @@ function isTokenExpired(token) {
             }
             
             const { id: userId, username, token } = userData;
-            const API_URL = process.env.API_URL;
+            // Use API_URL from env.js or fallback to localhost
+            const API_URL = typeof ENV !== 'undefined' ? ENV.API_URL : undefined;
             
             // Update navbar with user info
             updateNavbar(username);
@@ -422,7 +425,7 @@ function isTokenExpired(token) {
                             throw new Error('No se encontró la sesión del usuario');
                         }
 
-                        const response = await fetch(`http://localhost:8080/reservas/${reservationId}/cancelar`, {
+                        const response = await fetch(`${API_URL}/reservas/${reservationId}/cancelar`, {
                             method: 'PATCH',
                             headers: {
                                 'Authorization': `Bearer ${userData.token}`,
