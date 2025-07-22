@@ -1,4 +1,4 @@
-const API_URL = 'https://comitas-app-backend.onrender.com';
+const API_URL = process.env.API_URL;
 
 // Sucursales disponibles (podrían venir de una API real)
 const LOCALS = [
@@ -69,13 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
         responsable: document.getElementById('responsable').value,
         metodoPago: document.getElementById('metodoPago').value,
         cantidadPersonas: parseInt(document.getElementById('cantidadPersonas').value),
-        localDTO: { id: document.getElementById('localId').value },
-        usuarioDTO: { id: userId }
+        branch: document.getElementById('localId').value,
+        user: userId,
       };
   
       async function verificarReservaExistente(usuarioId, fechaISO, token) {
         const fechaSoloDia = fechaISO.split('T')[0]; // yyyy-MM-dd
-        
+  
         try {
           const url = `${API_URL}/usuarios/${usuarioId}/reserva-dia?fecha=${fechaSoloDia}`;
           const response = await fetch(url, {
@@ -90,8 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error(errorData.message || 'Error al verificar reservas existentes');
           }
           
-          const data = await response.json();
-          return data.tieneReserva; // true o false
+          const result = await response.json();
+          
+          // Verificar si la respuesta tiene el formato esperado
+          if (result && typeof result === 'object' && 'data' in result) {
+            // Si hay al menos una reserva en el array data, retornar true
+            return Array.isArray(result.data) && result.data.length > 0;
+          }
+          
+          // Por compatibilidad con versiones anteriores, en caso de que el formato sea diferente
+          return false;
+          
         } catch (error) {
           console.error('Error en verificarReservaExistente:', error);
           throw error;
@@ -129,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       try {
         // Validaciones adicionales
-        if (!reserva.fechaReserva || !reserva.metodoPago || !reserva.responsable || !reserva.localDTO.id) {
+        if (!reserva.fechaReserva || !reserva.metodoPago || !reserva.responsable || !reserva.branch) {
           throw new Error('Por favor, complete todos los campos obligatorios.');
         }
   
@@ -161,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await Swal.fire({
           icon: 'success',
           title: '¡Reserva confirmada!',
-          text: `Tu reserva fue registrada con ID interno ${result.id}.`,
+          text: `Tu reserva fue registrada con ID interno ${result.data.id}.`,
           confirmButtonColor: 'var(--primary-color)'
         });
   

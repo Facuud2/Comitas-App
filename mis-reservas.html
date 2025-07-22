@@ -235,7 +235,7 @@ function isTokenExpired(token) {
             }
             
             const { id: userId, username, token } = userData;
-            const API_URL = 'https://comitas-app-backend.onrender.com'; // Update with your API URL
+            const API_URL = process.env.API_URL;
             
             // Update navbar with user info
             updateNavbar(username);
@@ -333,8 +333,10 @@ function isTokenExpired(token) {
                     
                     // Create status badge
                     const statusBadge = document.createElement('span');
-                    statusBadge.className = 'status-badge status-confirmed';
-                    statusBadge.textContent = 'Confirmada';
+                    const status = reservation.estado || 'PENDIENTE';
+                    const statusClass = status.toLowerCase() === 'cancelada' ? 'status-cancelled' : 'status-confirmed';
+                    statusBadge.className = `status-badge ${statusClass}`;
+                    statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
                     
                     // Create actions
                     const actions = `
@@ -415,25 +417,41 @@ function isTokenExpired(token) {
                 
                 if (result.isConfirmed) {
                     try {
-                        // Here you would typically make an API call to cancel the reservation
-                        // For now, we'll just show a success message
-                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        const userData = JSON.parse(localStorage.getItem('userData'));
+                        if (!userData || !userData.token) {
+                            throw new Error('No se encontró la sesión del usuario');
+                        }
+
+                        const response = await fetch(`http://localhost:8080/reservas/${reservationId}/cancelar`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Authorization': `Bearer ${userData.token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({}));
+                            throw new Error(errorData.message || 'Error al cancelar la reserva');
+                        }
+                        
+                        const result = await response.json();
                         
                         Swal.fire({
                             title: '¡Cancelada!',
-                            text: 'La reserva ha sido cancelada.',
+                            text: result.message || 'La reserva ha sido cancelada exitosamente.',
                             icon: 'success',
                             confirmButtonColor: 'var(--primary-color)'
                         });
                         
-                        // Reload reservations
+                        // Reload reservations to update the list
                         loadReservations();
                         
                     } catch (error) {
                         console.error('Error al cancelar la reserva:', error);
                         Swal.fire({
                             title: 'Error',
-                            text: 'No se pudo cancelar la reserva. Por favor, intente nuevamente.',
+                            text: error.message || 'No se pudo cancelar la reserva. Por favor, intente nuevamente.',
                             icon: 'error',
                             confirmButtonColor: 'var(--primary-color)'
                         });
