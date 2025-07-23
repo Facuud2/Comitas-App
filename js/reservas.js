@@ -96,13 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const result = await response.json();
           
           // Verificar si la respuesta tiene el formato esperado
-          if (result && typeof result === 'object' && 'data' in result) {
-            // Si hay al menos una reserva en el array data, retornar true
-            return Array.isArray(result.data) && result.data.length > 0;
-          }
-          
-          // Por compatibilidad con versiones anteriores, en caso de que el formato sea diferente
-          return false;
+          return result.data.length > 0;
           
         } catch (error) {
           console.error('Error en verificarReservaExistente:', error);

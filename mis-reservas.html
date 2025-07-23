@@ -87,29 +87,54 @@
         }
         
         .status-badge {
-            padding: 0.35em 0.65em;
-            font-size: 0.75em;
-            font-weight: 700;
-            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5em 0.8em;
+            font-size: 0.8em;
+            font-weight: 600;
+            line-height: 1.2;
             text-align: center;
             white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.25rem;
+            vertical-align: middle;
+            border-radius: 1rem;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 2px;
         }
         
         .status-confirmed {
-            background-color: #d4edda;
             color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .status-confirmed-dot {
+            background-color: #28a745;
+            box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+        }
+        
+        .status-cancelled {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .status-cancelled-dot {
+            background-color: #dc3545;
+            box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
         }
         
         .status-pending {
             background-color: #fff3cd;
             color: #856404;
-        }
-        
-        .status-cancelled {
-            background-color: #f8d7da;
-            color: #721c24;
         }
         
         .loading-spinner {
@@ -334,21 +359,33 @@ function isTokenExpired(token) {
                     // Get branch name
                     const branchName = getBranchName(reservation.branch);
                     
-                    // Create status badge
-                    const statusBadge = document.createElement('span');
-                    const status = reservation.estado || 'PENDIENTE';
-                    const statusClass = status.toLowerCase() === 'cancelada' ? 'status-cancelled' : 'status-confirmed';
-                    statusBadge.className = `status-badge ${statusClass}`;
-                    statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+                    // Create status badge with colored dot based on boolean status
+                    const isConfirmed = reservation.status === true || reservation.status === 'true';
+                    const statusText = isConfirmed ? 'Confirmada' : 'Cancelada';
+                    const statusClass = isConfirmed ? 'status-confirmed' : 'status-cancelled';
                     
-                    // Create actions
+                    // Create the status badge container
+                    const statusBadge = document.createElement('span');
+                    statusBadge.className = `status-badge ${statusClass}`;
+                    
+                    // Create and append the colored dot
+                    const statusDot = document.createElement('span');
+                    statusDot.className = `status-dot ${statusClass}-dot`;
+                    
+                    // Add the dot and text to the badge
+                    statusBadge.appendChild(statusDot);
+                    statusBadge.appendChild(document.createTextNode(statusText));
+                    
+                    // Create actions - only show cancel button if reservation is not already cancelled
                     const actions = `
-                        <button class="btn btn-sm btn-outline-primary me-1 view-details" data-id="${reservation.id}">
+                        <button class="btn btn-sm btn-outline-primary me-1 view-details" data-id="${reservation.id}" title="Ver detalles">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger cancel-reservation" data-id="${reservation.id}">
+                        ${isConfirmed ? `
+                        <button class="btn btn-sm btn-outline-danger cancel-reservation" data-id="${reservation.id}" title="Cancelar reserva">
                             <i class="fas fa-times"></i>
                         </button>
+                        ` : ''}
                     `;
                     
                     // Add cells to the row
