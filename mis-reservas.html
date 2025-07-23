@@ -263,7 +263,7 @@ function isTokenExpired(token) {
             
             const { id: userId, username, token } = userData;
             // Use API_URL from env.js or fallback to localhost
-            const API_URL = typeof ENV !== 'undefined' ? ENV.API_URL : undefined;
+            const API_URL = process.env.API_URL;
             
             // Update navbar with user info
             updateNavbar(username);

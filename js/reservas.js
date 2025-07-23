@@ -1,7 +1,7 @@
 
 
 // API_URL is loaded from env.js
-const API_URL = typeof ENV !== 'undefined' ? ENV.API_URL : undefined;
+const API_URL = process.env.API_URL;
 
 // Sucursales disponibles (podrían venir de una API real)
 const LOCALS = [
