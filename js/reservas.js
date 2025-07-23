@@ -1,7 +1,7 @@
 
 
 // API_URL is loaded from env.js
-const API_URL = import.meta.env.VITE_API_KEY;
+const API_URL = "https://comitas-app-backend.onrender.com";
 
 // Sucursales disponibles (podrían venir de una API real)
 const LOCALS = [

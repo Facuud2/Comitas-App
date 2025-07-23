@@ -262,7 +262,7 @@ function isTokenExpired(token) {
             
             const { id: userId, username, token } = userData;
             // Use API_URL from env.js or fallback to localhost
-            const API_URL = process.env.API_URL;
+            const API_URL = "https://comitas-app-backend.onrender.com";
             
             // Update navbar with user info
             updateNavbar(username);
